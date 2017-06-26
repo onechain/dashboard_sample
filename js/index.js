@@ -3,9 +3,9 @@ import 'd3';
 import 'jquery-ui';
 import moment from 'moment';
 
-import 'dashboard-framework/dashboard-core';
-import 'dashboard-framework/dashboard-util';
-import 'dashboard-framework/dashboard-template';
+import 'jif-dashboard/dashboard-core'
+import 'jif-dashboard/dashboard-util'
+import 'jif-dashboard/dashboard-template'
 
 // import this first because it sets a global all the rest of the widgets need
 import './widgets/widget-root';
@@ -36,10 +36,12 @@ window.Tower = {
 		Dashboard.init()
 
 	    Dashboard.preregisterWidgets({
+	    	'lab'			: require('./widgets/lab'),
 		  'info'			: require('./widgets/info'),
 	      'form'            : require('./widgets/form'),
 	      'misc'            : require('./widgets/misc'),
 		  'date'			: require('./widgets/date'),
+
 		  'controls'		: require('./widgets/controls'),
 		  'weather'			: require('./widgets/weather')
 		});
@@ -62,12 +64,14 @@ window.Tower = {
 			// the array of widgets that belong to the section,
 			// these were preregistered in init() because they are unique
 			var widgets = [
+				{ widgetId: 'misc' },
+				{ widgetId: 'lab' },
 				{ widgetId: 'date' },
 				{ widgetId: 'controls' },
 				{ widgetId: 'weather' },
 				{ widgetId: 'info' , data: data}, //data can be passed in
 				{ widgetId: 'form' },
-				{ widgetId: 'misc' },
+
 			];
 
 			// opens the section and pass in the widgets that it needs
