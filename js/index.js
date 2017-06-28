@@ -13,6 +13,7 @@ import 'jif-dashboard/dashboard-template'
 // import this first because it sets a global all the rest of the widgets need
 import './widgets/widget-root';
 
+import common from './common';
 
 window.Tower = {
 	ready: false,
@@ -41,16 +42,16 @@ window.Tower = {
 
 	    Dashboard.preregisterWidgets({
 
-			'chaincodelist'	: require('./widgets/chaincodelist'),
+	    	'chaincodelist'		: require('./widgets/chaincodelist'),
 			'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
 			'metrix_block_min'	: require('./widgets/metrix_block_min'),
-		  'metrix_txn_sec'	: require('./widgets/metrix_txn_sec'),
-		  'metrix_txn_min'	: require('./widgets/metrix_txn_min'),
-		  'peerlist'		: require('./widgets/peerlist'),
-		  'blockview'		: require('./widgets/blockview'),
-		  'blocklist'		: require('./widgets/blocklist'),
-		  'blockinfo'		: require('./widgets/blockinfo'),
-		  'txdetail'		: require('./widgets/txdetail'),
+			'metrix_txn_sec'	: require('./widgets/metrix_txn_sec'),
+			'metrix_txn_min'	: require('./widgets/metrix_txn_min'),
+			'peerlist'			: require('./widgets/peerlist'),
+			'blockview'			: require('./widgets/blockview'),
+			'blocklist'			: require('./widgets/blocklist'),
+			'blockinfo'			: require('./widgets/blockinfo'),
+			'txdetail'			: require('./widgets/txdetail'),
 
 			/*'lab'				: require('./widgets/lab'),
 		  'info'			: require('./widgets/info'),
@@ -61,12 +62,32 @@ window.Tower = {
 		  'weather'			: require('./widgets/weather')*/
 		});
 
-		//open first section - console
-		Tower.section['channel']();
+		//open first section - channel
+		Tower.section['default']();
 	},
 
 	//define the sections
 	section: {
+
+		'default':function () {
+
+			$.when(
+				common.load({ url: 'monitordata/default.json' })
+			).done(function(response) {
+				statusUpdate(response);
+			}).fail(function() {
+				statusUpdate({
+					status: 'DOWN',
+					peerCount: 'n/a',
+					latestBlock: 'n/a',
+					pendingTxn: 'n/a'
+				});
+			});
+
+			alert('I am frist !!!!!');
+
+		},
+
 		'channel': function() {
 			// data that the widgets will use
 			var data = {
@@ -78,9 +99,10 @@ window.Tower = {
 
 			// the array of widgets that belong to the section,
 			// these were preregistered in init() because they are unique
+
 			var widgets = [
 
-				{ widgetId: 'blockinfo' ,data: data},
+				{ widgetId: 'blockinfo'},
 				{ widgetId: 'blocklist' ,data: data},
 				{ widgetId: 'blockview' ,data: data},
 				{ widgetId: 'txdetail'  ,data: data},
@@ -97,8 +119,7 @@ window.Tower = {
 				{ widgetId: 'controls' },
 				{ widgetId: 'weather' },
 				{ widgetId: 'info' , data: data}, //data can be passed in
-				{ widgetId: 'form' },
-*/
+				{ widgetId: 'form' },*/
 
 			];
 
@@ -171,7 +192,7 @@ $(function() {
 	// logo handler
 	$("a.tower-logo").click(function(e) {
 		e.preventDefault();
-		$("#console").click();
+		$("#channel").click();
 	});
 
 	// Menu (burger) handler
@@ -181,9 +202,11 @@ $(function() {
 		$('.tower-body-wrapper').toggleClass('tower-nav-min');
 	});
 
+
 	$('#reset').on('click', function() {
 		Dashboard.reset();
 	})
+
 
 	// Navigation menu handler
 	$('.tower-sidebar li').click(function(e) {
