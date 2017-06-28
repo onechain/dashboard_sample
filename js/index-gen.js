@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f49218dda57f1493d889"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9e66fcd1551452eef8f0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -711,15 +711,19 @@
 
 	__webpack_require__(142);
 
-	__webpack_require__(222);
-
 	__webpack_require__(223);
 
-	__webpack_require__(221);
+	__webpack_require__(224);
+
+	__webpack_require__(222);
 
 	var _common = __webpack_require__(203);
 
 	var _common2 = _interopRequireDefault(_common);
+
+	__webpack_require__(225);
+
+	__webpack_require__(213);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -728,6 +732,7 @@
 		ready: false,
 		current: null,
 		status: {},
+		fabricexplorer: {},
 
 		// Tower Control becomes ready only after the first status is received from the server
 		isReady: function isReady() {
@@ -751,24 +756,30 @@
 			Dashboard.preregisterWidgets({
 
 				'chaincodelist': __webpack_require__(206),
-				'metrix_choc_tx': __webpack_require__(213),
+				'metrix_choc_tx': __webpack_require__(214),
 				'metrix_block_min': __webpack_require__(212),
-				'metrix_txn_sec': __webpack_require__(215),
-				'metrix_txn_min': __webpack_require__(214),
-				'peerlist': __webpack_require__(217),
+				'metrix_txn_sec': __webpack_require__(216),
+				'metrix_txn_min': __webpack_require__(215),
+				'peerlist': __webpack_require__(218),
 				'blockview': __webpack_require__(205),
 				'blocklist': __webpack_require__(204),
 				'blockinfo': __webpack_require__(202),
-				'txdetail': __webpack_require__(218)
+				'txdetail': __webpack_require__(219)
 
-				/*'lab'				: require('./widgets/lab'),
-	    'info'			: require('./widgets/info'),
-	       'form'            : require('./widgets/form'),
-	       'misc'            : require('./widgets/misc'),
-	    'date'			: require('./widgets/date'),
-	    'controls'		: require('./widgets/controls'),
-	    'weather'			: require('./widgets/weather')*/
+				/*
+	     'lab'				: require('./widgets/lab'),
+	     'info'			: require('./widgets/info'),
+	     'form'            : require('./widgets/form'),
+	     'misc'            : require('./widgets/misc'),
+	     'date'			: require('./widgets/date'),
+	     'controls'		: require('./widgets/controls'),
+	     'weather'			: require('./widgets/weather')
+	   */
 			});
+
+			// Reusing socket from cakeshop.js
+			Tower.stomp = Client.stomp;
+			Tower.stomp_subscriptions = Client._stomp_subscriptions;
 
 			//open first section - channel
 			Tower.section['default']();
@@ -779,9 +790,24 @@
 
 			'default': function _default() {
 
-				_jquery2.default.when(_common2.default.load({ url: 'monitordata/default.json' })).done(function (response) {
+				var statusUpdate = function statusUpdate(response) {
+
+					var status = JSON.parse(response).data.attributes;
+
+					Tower.fabricexplorer = status;
+
+					if (!Tower.ready) {
+						Tower.isReady();
+					}
+
+					Dashboard.Utils.emit('node-status|announce');
+				};
+
+				_jquery2.default.when(_common2.default.load({ url: 'default.json' })).done(function (response) {
+
 					statusUpdate(response);
 				}).fail(function () {
+
 					statusUpdate({
 						status: 'DOWN',
 						peerCount: 'n/a',
@@ -789,8 +815,7 @@
 						pendingTxn: 'n/a'
 					});
 				});
-
-				alert('I am frist !!!!!');
+				//start websocket
 			},
 
 			'channel': function channel() {
@@ -804,10 +829,10 @@
 					// the array of widgets that belong to the section,
 					// these were preregistered in init() because they are unique
 
-				};var widgets = [{ widgetId: 'blockinfo' }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data }, { widgetId: 'metrix_choc_tx', data: data }, { widgetId: 'chaincodelist', data: data }];
+				};var widgets = [{ widgetId: 'blockinfo', data: { a: '11234 ', b: 'init ffffff ', c: Tower.fabricexplorer } }, { widgetId: 'blocklist' }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data }, { widgetId: 'metrix_choc_tx', data: data }, { widgetId: 'chaincodelist', data: data }];
 
 				// opens the section and pass in the widgets that it needs
-				Dashboard.showSection('peers', widgets);
+				Dashboard.showSection('channel', widgets);
 			},
 
 			// a section using same widget template for multiple widgets
@@ -841,7 +866,7 @@
 				//iterate over the data, creating a new widget for each item
 				_.each(userlist, function (user, key) {
 					var widget = {};
-					widget[key + '-user'] = __webpack_require__(219);
+					widget[key + '-user'] = __webpack_require__(220);
 					Dashboard.preregisterWidgets(widget);
 
 					widgets = widgets.concat([{
@@ -85978,24 +86003,24 @@
 		"./lab.js": 211,
 		"./metrix_block_min": 212,
 		"./metrix_block_min.js": 212,
-		"./metrix_choc_tx": 213,
-		"./metrix_choc_tx.js": 213,
-		"./metrix_txn_min": 214,
-		"./metrix_txn_min.js": 214,
-		"./metrix_txn_sec": 215,
-		"./metrix_txn_sec.js": 215,
-		"./misc": 216,
-		"./misc.js": 216,
-		"./peerlist": 217,
-		"./peerlist.js": 217,
-		"./txdetail": 218,
-		"./txdetail.js": 218,
-		"./user": 219,
-		"./user.js": 219,
-		"./weather": 220,
-		"./weather.js": 220,
-		"./widget-root": 221,
-		"./widget-root.js": 221
+		"./metrix_choc_tx": 214,
+		"./metrix_choc_tx.js": 214,
+		"./metrix_txn_min": 215,
+		"./metrix_txn_min.js": 215,
+		"./metrix_txn_sec": 216,
+		"./metrix_txn_sec.js": 216,
+		"./misc": 217,
+		"./misc.js": 217,
+		"./peerlist": 218,
+		"./peerlist.js": 218,
+		"./txdetail": 219,
+		"./txdetail.js": 219,
+		"./user": 220,
+		"./user.js": 220,
+		"./weather": 221,
+		"./weather.js": 221,
+		"./widget-root": 222,
+		"./widget-root.js": 222
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -86032,64 +86057,52 @@
 
 			hideLink: true,
 
-			customButtons: '<li><i class="add-account fa fa-expand"></i></li>',
+			customButtons: '<li><i class="show_detail fa fa-expand"></i></li>',
 
 			template: _.template('<div class="info-table"> <table class="table table-striped"> ' + '' + '<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href="">11111</a></td> </tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
 
-			init: function init(data) {
+			setData: function setData(data) {
+				this.data = data;
 
-				Dashboard.Utils.emit('widget|init|' + this.name);
-
-				if (data) {
-					this.setData(data);
-				}
-
-				this.shell = Dashboard.TEMPLATES.widget({
-					name: this.name,
-					title: this.title,
-					size: this.size,
-					hideLink: this.hideLink,
-					hideRefresh: this.hideRefresh,
-					customButtons: this.customButtons,
-					details: true
-				});
-
-				this.initialized = true;
-
-				Dashboard.Utils.emit('widget|ready|' + this.name);
-
-				this.ready();
-
-				Dashboard.Utils.emit('widget|render|' + this.name);
-
-				this.subscribe();
+				this.title = 'Block #' + this.data.a;
 			},
 
-			render: function render() {
-				Dashboard.render.widget(this.name, this.shell.tpl);
-				this.fetch();
-
-				$('#widget-' + this.shell.id).css({
-					'height': '240px',
-					'margin-bottom': '10px',
-					'overflow-x': 'hidden',
-					'width': '100%'
-				}).html(this.template({
-					app: 'test1',
-					desc: 'testdata1',
-					numUser: 'dddd'
-				}));
+			fetch: function fetch() {
 
 				var _this = this;
-				$('#widget-shell-' + _this.shell.id + ' i.add-account').click(function (e) {
-					$.when().done(function () {
-						openblockdetail('12');
-					});
-				});
 
-				this.postRender();
-				$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + this.name]);
+				$.when(_common2.default.load({ url: 'default.json' })).fail(function (res) {}).done(function (res) {
+
+					//Dashboard.render.widget(_this.name, _this.shell.tpl);
+					alert('I am blockinfo !!!!!' + _this.data.c.currchannel);
+
+					_this.title = 'Block #' + _this.data.a;
+
+					$('#widget-' + _this.shell.id).css({
+						'height': '240px',
+						'margin-bottom': '10px',
+						'overflow-x': 'hidden',
+						'width': '100%'
+					}).html(_this.template({
+						app: 'test1',
+						desc: 'testdata1',
+						numUser: 'dddd'
+					}));
+
+					$('#widget-shell-' + _this.shell.id + ' .panel-title span').html(_this.title);
+
+					$('#widget-shell-' + _this.shell.id + ' i.add-account').click(function (e) {
+
+						$.when().done(function () {
+							openblockdetail('12');
+						});
+					});
+
+					_this.postRender();
+					$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + _this.name]);
+				});
 			}
+
 		};
 
 		var widget = _.extend({}, widgetRoot, extended);
@@ -86272,7 +86285,7 @@
 
 			hideLink: true,
 
-			template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' + '<thead style="font-weight: bold;"><tr><td>Block</td><td>TXNs</td></tr></thead>' + '<tbody><tr> <td>App Name</td> <td><%= app %></td></tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href=""><%= url %></a></td></tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
+			template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' + '<thead style="font-weight: bold;">' + '<tr><td>Block</td><td>TXNs</td><td>nums</td></tr>' + '</thead>' + '<tbody>' + '<tr> <td>#1</td> <td><%= app %></td><td>12</td></tr>' + '<tr> <td>#2</td> <td><%= numUser %></td> <td>12</td></tr>' + '<tr> <td>#3</td> <td><a href=""><%= url %></a></td><td>12</td></tr>' + '<tr> <td>#4</td> <td><%=desc%> </td> <td>12</td></tr>' + '</tbody> </table> <div>'),
 
 			init: function init(data) {
 				Dashboard.Utils.emit('widget|init|' + this.name);
@@ -86312,14 +86325,23 @@
 					'overflow-x': 'hidden',
 					'width': '100%'
 				}).html(this.template({
-					app: this.data.appName,
-					desc: this.data.description,
-					numUser: this.data.numUser,
-					url: this.data.url
+					app: 'dddd',
+					desc: 'dddd',
+					numUser: 'dddd',
+					url: 'dddd'
 				}));
 
 				this.postRender();
 				$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + this.name]);
+
+				$('#widget-' + this.shell.id).on('click', 'a', this.showBlock);
+			},
+
+			showBlock: function showBlock(e) {
+
+				e.preventDefault();
+
+				Dashboard.show({ widgetId: 'blockinfo', section: 'channel', data: { a: 'ddd', b: 'bbb' }, refetch: true });
 			}
 		};
 
@@ -86755,38 +86777,51 @@
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
 
+	var _client = __webpack_require__(213);
+
+	var _client2 = _interopRequireDefault(_client);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	module.exports = function (id) {
 		var extended = {
 			name: 'metrix_block_min',
-			title: 'block min',
+			title: 'Blocks/min',
 			size: 'medium',
 			widgetId: id, //needed for dashboard
 
 			hideLink: true,
+			topic: '/topic/metrics/blocksPerMin',
+
+			subscribe: function subscribe() {
+				Client.subscribe(this.topic, this.onData);
+			},
 
 			fetch: function fetch() {
 				$('#widget-' + widget.shell.id).html('<div id="' + widget.name + '" class="epoch category10" style="width:100%; height: 210px;"></div>');
 
 				widget.chart = $('#' + widget.name).epoch({
 					type: 'time.area',
-
-					data: [
-					// The first layer
-					{
-						label: "Layer 1",
-						values: [{ time: 1370044800, y: 100 }, { time: 1370044801, y: 1000 }]
-					},
-
-					// The second layer
-					{
-						label: "Layer 2",
-						values: [{ time: 1370044800, y: 78 }, { time: 1370044801, y: 98 }]
+					data: [{
+						label: 'Blocks per MIN',
+						values: [{ time: new Date().getTime() / 1000, y: 0 }]
 					}],
 					axes: ['left', 'right', 'bottom']
 				});
 			},
 
-			onData: function onData(data) {}
+			onData: function onData(data) {
+				console.info(data);
+				/*data = data.data.attributes;
+	    if (!data || !data.result) {
+	       return;
+	   }
+	    var b = {
+	       time: data.result.timestamp,
+	       y: data.result.value
+	   };
+	   widget.chart.push([ b ]);*/
+			}
 		};
 
 		var widget = _.extend({}, widgetRoot, extended);
@@ -86798,6 +86833,92 @@
 
 /***/ }),
 /* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(_, $) {"use strict";
+
+	var _stringify = __webpack_require__(178);
+
+	var _stringify2 = _interopRequireDefault(_stringify);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	(function () {
+	    var Client = window.Client = {};
+
+	    Client.post = function (url, data) {
+	        if (!_.isString(data)) {
+	            data = (0, _stringify2.default)(data);
+	        }
+
+	        return $.ajax({
+	            url: url,
+	            method: "POST",
+	            dataType: "json",
+	            contentType: "application/json",
+	            data: data
+	        });
+	    };
+
+	    Client._stomp_subscriptions = {};
+	    Client.subscribe = function (topic, handler) {
+	        Client._stomp_subscriptions[topic] = { topic: topic, handler: handler };
+	        if (Client.stomp && Client.stomp.connected === true) {
+	            console.log('STOMP subscribing to ' + topic);
+
+	            var sub = Client.stomp.subscribe(topic, function (res) {
+	                handler(JSON.parse(res.body));
+	            });
+	            Client._stomp_subscriptions[topic].fh = sub;
+	            return sub;
+	        }
+	        return false;
+	    };
+
+	    /*$(window).on("beforeunload", function() {
+	    	if (!(Client.stomp && Client.stomp.connected === true)) {
+	    		return;
+	    	}
+	    	_.values(Client._stomp_subscriptions).forEach(function(sub) {
+	    		if (sub && sub.fh) {
+	    			sub.fh.unsubscribe();
+	    		}
+	    	});
+	    	Client.stomp.disconnect();
+	    });*/
+
+	    Client.connected = false;
+	    Client.connect = function () {
+
+	        // try to derive the websocket location from the current location
+	        var pathname = window.location.pathname;
+	        // var wsUrl='ws://'+window.location.host+'/stomp';
+	        var wsUrl = 'ws://localhost:8080/stomp';
+
+	        var stomp = Client.stomp = Stomp.client(wsUrl);
+
+	        stomp.debug = null;
+	        stomp.connect({}, function (frame) {
+	            Client.connected = true;
+	            console.log("Connected via STOMP!");
+	            // reconnect all topic subscriptions
+	            _.each(Client._stomp_subscriptions, function (sub, topic) {
+	                Client.subscribe(topic, sub.handler);
+	            });
+	        }, function (err) {
+	            if (Client.connected) {
+	                console.log("Lost STOMP connection", err);
+	            }
+	            // setTimeout(Client.connect, 1000); // always reconnect
+	        });
+	    };
+
+	    Client.connect();
+	})();
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
+
+/***/ }),
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86839,7 +86960,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86886,7 +87007,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86933,7 +87054,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86971,7 +87092,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -87044,7 +87165,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -87117,7 +87238,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -87189,7 +87310,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -87229,7 +87350,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -87323,7 +87444,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -87393,7 +87514,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {'use strict';
@@ -87442,6 +87563,247 @@
 		}
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ }),
+/* 225 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	// Generated by CoffeeScript 1.7.1
+	/*
+	   Stomp Over WebSocket http://www.jmesnil.net/stomp-websocket/doc/ | Apache License V2.0
+
+	   Copyright (C) 2010-2013 [Jeff Mesnil](http://jmesnil.net/)
+	   Copyright (C) 2012 [FuseSource, Inc.](http://fusesource.com)
+	 */
+	(function () {
+	   var t,
+	       e,
+	       n,
+	       i,
+	       r = {}.hasOwnProperty,
+	       o = [].slice;t = { LF: "\n", NULL: "\x00" };n = function () {
+	      var e;function n(t, e, n) {
+	         this.command = t;this.headers = e != null ? e : {};this.body = n != null ? n : "";
+	      }n.prototype.toString = function () {
+	         var e, i, o, s, u;e = [this.command];o = this.headers["content-length"] === false ? true : false;if (o) {
+	            delete this.headers["content-length"];
+	         }u = this.headers;for (i in u) {
+	            if (!r.call(u, i)) continue;s = u[i];e.push("" + i + ":" + s);
+	         }if (this.body && !o) {
+	            e.push("content-length:" + n.sizeOfUTF8(this.body));
+	         }e.push(t.LF + this.body);return e.join(t.LF);
+	      };n.sizeOfUTF8 = function (t) {
+	         if (t) {
+	            return encodeURI(t).match(/%..|./g).length;
+	         } else {
+	            return 0;
+	         }
+	      };e = function e(_e) {
+	         var i, r, o, s, u, a, c, f, h, l, p, d, g, b, m, v, y;s = _e.search(RegExp("" + t.LF + t.LF));u = _e.substring(0, s).split(t.LF);o = u.shift();a = {};d = function d(t) {
+	            return t.replace(/^\s+|\s+$/g, "");
+	         };v = u.reverse();for (g = 0, m = v.length; g < m; g++) {
+	            l = v[g];f = l.indexOf(":");a[d(l.substring(0, f))] = d(l.substring(f + 1));
+	         }i = "";p = s + 2;if (a["content-length"]) {
+	            h = parseInt(a["content-length"]);i = ("" + _e).substring(p, p + h);
+	         } else {
+	            r = null;for (c = b = p, y = _e.length; p <= y ? b < y : b > y; c = p <= y ? ++b : --b) {
+	               r = _e.charAt(c);if (r === t.NULL) {
+	                  break;
+	               }i += r;
+	            }
+	         }return new n(o, a, i);
+	      };n.unmarshall = function (n) {
+	         var i, r, o, s;r = n.split(RegExp("" + t.NULL + t.LF + "*"));s = { frames: [], partial: "" };s.frames = function () {
+	            var t, n, o, s;o = r.slice(0, -1);s = [];for (t = 0, n = o.length; t < n; t++) {
+	               i = o[t];s.push(e(i));
+	            }return s;
+	         }();o = r.slice(-1)[0];if (o === t.LF || o.search(RegExp("" + t.NULL + t.LF + "*$")) !== -1) {
+	            s.frames.push(e(o));
+	         } else {
+	            s.partial = o;
+	         }return s;
+	      };n.marshall = function (e, i, r) {
+	         var o;o = new n(e, i, r);return o.toString() + t.NULL;
+	      };return n;
+	   }();e = function () {
+	      var e;function r(t) {
+	         this.ws = t;this.ws.binaryType = "arraybuffer";this.counter = 0;this.connected = false;this.heartbeat = { outgoing: 1e4, incoming: 1e4 };this.maxWebSocketFrameSize = 16 * 1024;this.subscriptions = {};this.partialData = "";
+	      }r.prototype.debug = function (t) {
+	         var e;return typeof window !== "undefined" && window !== null ? (e = window.console) != null ? e.log(t) : void 0 : void 0;
+	      };e = function e() {
+	         if (Date.now) {
+	            return Date.now();
+	         } else {
+	            return new Date().valueOf;
+	         }
+	      };r.prototype._transmit = function (t, e, i) {
+	         var r;r = n.marshall(t, e, i);if (typeof this.debug === "function") {
+	            this.debug(">>> " + r);
+	         }while (true) {
+	            if (r.length > this.maxWebSocketFrameSize) {
+	               this.ws.send(r.substring(0, this.maxWebSocketFrameSize));r = r.substring(this.maxWebSocketFrameSize);if (typeof this.debug === "function") {
+	                  this.debug("remaining = " + r.length);
+	               }
+	            } else {
+	               return this.ws.send(r);
+	            }
+	         }
+	      };r.prototype._setupHeartbeat = function (n) {
+	         var r, o, s, u, a, c;if ((a = n.version) !== i.VERSIONS.V1_1 && a !== i.VERSIONS.V1_2) {
+	            return;
+	         }c = function () {
+	            var t, e, i, r;i = n["heart-beat"].split(",");r = [];for (t = 0, e = i.length; t < e; t++) {
+	               u = i[t];r.push(parseInt(u));
+	            }return r;
+	         }(), o = c[0], r = c[1];if (!(this.heartbeat.outgoing === 0 || r === 0)) {
+	            s = Math.max(this.heartbeat.outgoing, r);if (typeof this.debug === "function") {
+	               this.debug("send PING every " + s + "ms");
+	            }this.pinger = i.setInterval(s, function (e) {
+	               return function () {
+	                  e.ws.send(t.LF);return typeof e.debug === "function" ? e.debug(">>> PING") : void 0;
+	               };
+	            }(this));
+	         }if (!(this.heartbeat.incoming === 0 || o === 0)) {
+	            s = Math.max(this.heartbeat.incoming, o);if (typeof this.debug === "function") {
+	               this.debug("check PONG every " + s + "ms");
+	            }return this.ponger = i.setInterval(s, function (t) {
+	               return function () {
+	                  var n;n = e() - t.serverActivity;if (n > s * 2) {
+	                     if (typeof t.debug === "function") {
+	                        t.debug("did not receive server activity for the last " + n + "ms");
+	                     }return t.ws.close();
+	                  }
+	               };
+	            }(this));
+	         }
+	      };r.prototype._parseConnect = function () {
+	         var t, e, n, i;t = 1 <= arguments.length ? o.call(arguments, 0) : [];i = {};switch (t.length) {case 2:
+	               i = t[0], e = t[1];break;case 3:
+	               if (t[1] instanceof Function) {
+	                  i = t[0], e = t[1], n = t[2];
+	               } else {
+	                  i.login = t[0], i.passcode = t[1], e = t[2];
+	               }break;case 4:
+	               i.login = t[0], i.passcode = t[1], e = t[2], n = t[3];break;default:
+	               i.login = t[0], i.passcode = t[1], e = t[2], n = t[3], i.host = t[4];}return [i, e, n];
+	      };r.prototype.connect = function () {
+	         var r, s, u, a;r = 1 <= arguments.length ? o.call(arguments, 0) : [];a = this._parseConnect.apply(this, r);u = a[0], this.connectCallback = a[1], s = a[2];if (typeof this.debug === "function") {
+	            this.debug("Opening Web Socket...");
+	         }this.ws.onmessage = function (i) {
+	            return function (r) {
+	               var o, u, a, c, f, h, l, p, d, g, b, m, v;c = typeof ArrayBuffer !== "undefined" && r.data instanceof ArrayBuffer ? (o = new Uint8Array(r.data), typeof i.debug === "function" ? i.debug("--- got data length: " + o.length) : void 0, function () {
+	                  var t, e, n;n = [];for (t = 0, e = o.length; t < e; t++) {
+	                     u = o[t];n.push(String.fromCharCode(u));
+	                  }return n;
+	               }().join("")) : r.data;i.serverActivity = e();if (c === t.LF) {
+	                  if (typeof i.debug === "function") {
+	                     i.debug("<<< PONG");
+	                  }return;
+	               }if (typeof i.debug === "function") {
+	                  i.debug("<<< " + c);
+	               }d = n.unmarshall(i.partialData + c);i.partialData = d.partial;m = d.frames;v = [];for (g = 0, b = m.length; g < b; g++) {
+	                  f = m[g];switch (f.command) {case "CONNECTED":
+	                        if (typeof i.debug === "function") {
+	                           i.debug("connected to server " + f.headers.server);
+	                        }i.connected = true;i._setupHeartbeat(f.headers);v.push(typeof i.connectCallback === "function" ? i.connectCallback(f) : void 0);break;case "MESSAGE":
+	                        p = f.headers.subscription;l = i.subscriptions[p] || i.onreceive;if (l) {
+	                           a = i;h = f.headers["message-id"];f.ack = function (t) {
+	                              if (t == null) {
+	                                 t = {};
+	                              }return a.ack(h, p, t);
+	                           };f.nack = function (t) {
+	                              if (t == null) {
+	                                 t = {};
+	                              }return a.nack(h, p, t);
+	                           };v.push(l(f));
+	                        } else {
+	                           v.push(typeof i.debug === "function" ? i.debug("Unhandled received MESSAGE: " + f) : void 0);
+	                        }break;case "RECEIPT":
+	                        v.push(typeof i.onreceipt === "function" ? i.onreceipt(f) : void 0);break;case "ERROR":
+	                        v.push(typeof s === "function" ? s(f) : void 0);break;default:
+	                        v.push(typeof i.debug === "function" ? i.debug("Unhandled frame: " + f) : void 0);}
+	               }return v;
+	            };
+	         }(this);this.ws.onclose = function (t) {
+	            return function () {
+	               var e;e = "Whoops! Lost connection to " + t.ws.url;if (typeof t.debug === "function") {
+	                  t.debug(e);
+	               }t._cleanUp();return typeof s === "function" ? s(e) : void 0;
+	            };
+	         }(this);return this.ws.onopen = function (t) {
+	            return function () {
+	               if (typeof t.debug === "function") {
+	                  t.debug("Web Socket Opened...");
+	               }u["accept-version"] = i.VERSIONS.supportedVersions();u["heart-beat"] = [t.heartbeat.outgoing, t.heartbeat.incoming].join(",");return t._transmit("CONNECT", u);
+	            };
+	         }(this);
+	      };r.prototype.disconnect = function (t, e) {
+	         if (e == null) {
+	            e = {};
+	         }this._transmit("DISCONNECT", e);this.ws.onclose = null;this.ws.close();this._cleanUp();return typeof t === "function" ? t() : void 0;
+	      };r.prototype._cleanUp = function () {
+	         this.connected = false;if (this.pinger) {
+	            i.clearInterval(this.pinger);
+	         }if (this.ponger) {
+	            return i.clearInterval(this.ponger);
+	         }
+	      };r.prototype.send = function (t, e, n) {
+	         if (e == null) {
+	            e = {};
+	         }if (n == null) {
+	            n = "";
+	         }e.destination = t;return this._transmit("SEND", e, n);
+	      };r.prototype.subscribe = function (t, e, n) {
+	         var i;if (n == null) {
+	            n = {};
+	         }if (!n.id) {
+	            n.id = "sub-" + this.counter++;
+	         }n.destination = t;this.subscriptions[n.id] = e;this._transmit("SUBSCRIBE", n);i = this;return { id: n.id, unsubscribe: function unsubscribe() {
+	               return i.unsubscribe(n.id);
+	            } };
+	      };r.prototype.unsubscribe = function (t) {
+	         delete this.subscriptions[t];return this._transmit("UNSUBSCRIBE", { id: t });
+	      };r.prototype.begin = function (t) {
+	         var e, n;n = t || "tx-" + this.counter++;this._transmit("BEGIN", { transaction: n });e = this;return { id: n, commit: function commit() {
+	               return e.commit(n);
+	            }, abort: function abort() {
+	               return e.abort(n);
+	            } };
+	      };r.prototype.commit = function (t) {
+	         return this._transmit("COMMIT", { transaction: t });
+	      };r.prototype.abort = function (t) {
+	         return this._transmit("ABORT", { transaction: t });
+	      };r.prototype.ack = function (t, e, n) {
+	         if (n == null) {
+	            n = {};
+	         }n["message-id"] = t;n.subscription = e;return this._transmit("ACK", n);
+	      };r.prototype.nack = function (t, e, n) {
+	         if (n == null) {
+	            n = {};
+	         }n["message-id"] = t;n.subscription = e;return this._transmit("NACK", n);
+	      };return r;
+	   }();i = { VERSIONS: { V1_0: "1.0", V1_1: "1.1", V1_2: "1.2", supportedVersions: function supportedVersions() {
+	            return "1.1,1.0";
+	         } }, client: function client(t, n) {
+	         var r, o;if (n == null) {
+	            n = ["v10.stomp", "v11.stomp"];
+	         }r = i.WebSocketClass || WebSocket;o = new r(t, n);return new e(o);
+	      }, over: function over(t) {
+	         return new e(t);
+	      }, Frame: n };if (typeof exports !== "undefined" && exports !== null) {
+	      exports.Stomp = i;
+	   }if (typeof window !== "undefined" && window !== null) {
+	      i.setInterval = function (t, e) {
+	         return window.setInterval(e, t);
+	      };i.clearInterval = function (t) {
+	         return window.clearInterval(t);
+	      };window.Stomp = i;
+	   } else if (!exports) {
+	      self.Stomp = i;
+	   }
+	}).call(undefined);
 
 /***/ })
 /******/ ]);

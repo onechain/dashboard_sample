@@ -4,68 +4,92 @@ module.exports = function(id) {
 		name: 'blocklist',
 		title: 'Blocklist',
 		size: 'small',
+
+        url: 'api/block/get',
+        topic: '/topic/block',
+
 		widgetId: id, //needed for dashboard
+
+        lastBlockNum: null,
 
 		hideLink: true,
 
 
-		template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
-			'<thead style="font-weight: bold;"><tr><td>Block</td><td>TXNs</td></tr></thead>'+
-			'<tbody><tr> <td>App Name</td> <td><%= app %></td></tr>' +
-			'<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' +
-			'<tr> <td>URL</td> <td><a href=""><%= url %></a></td></tr>' +
-			'<tr> <td>Description</td> <td><%=desc%> </td> </tr>' +
-			'</tbody> </table> <div>'),
+        template: _.template('<table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
+            '<thead style="font-weight: bold;"><tr><td style="width:60px;">Block</td><td style="width:45px;">TXNs</td></tr></thead>' +
+            '<tbody><%= rows %></tbody></table>'),
 
-		init: function(data) {
-			Dashboard.Utils.emit('widget|init|' + this.name);
-
-			if (data) {
-				this.setData(data);
-			}
-
-			this.shell = Dashboard.TEMPLATES.widget({
-				name: this.name,
-				title: this.title,
-				size: this.size,
-				hideLink: this.hideLink,
-				hideRefresh: this.hideRefresh,
-				customButtons: this.customButtons,
-				details: true
-			});
-
-			this.initialized = true;
-
-			Dashboard.Utils.emit('widget|ready|' + this.name);
-
-			this.ready();
-
-			Dashboard.Utils.emit('widget|render|' + this.name);
-
-			this.subscribe();
-		},
+        templateRow: _.template('<tr><td>#<a href="#"><%= block.num %></a></td><td <% if (block.txCount == 0) { %>style="opacity: 0.2;"<% } %>><%= block.txCount %></td></tr>'),
 
 
-		render: function() {
-			Dashboard.render.widget(this.name, this.shell.tpl);
-			this.fetch();
+        setData: function(data) {
+            this.data = data;
 
-			$('#widget-' + this.shell.id).css({
-				'height': '240px',
-				'margin-bottom': '10px',
-				'overflow-x': 'hidden',
-				'width': '100%'
-			}).html( this.template({
-				app: this.data.appName,
-				desc: this.data.description,
-				numUser: this.data.numUser,
-				url: this.data.url
-			}) );
+            this.lastBlockNum = data;
+        },
 
-			this.postRender();
-			$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + this.name]);
-		},
-	};
+        subscribe: function(data) {
+            // subscribe to get new blocks
+            utils.subscribe(this.topic, this.onNewBlock);
+        },
+
+        onNewBlock: function(data) {
+
+            var b = {
+                num: data.number,
+                txCount: data.txCount,
+            };
+
+            $('#widget-' + widget.shell.id + ' > table > tbody').prepend( widget.templateRow({ block: b }) );
+        },
+
+        BLOCKS_TO_SHOW: 100,
+        fetch: function() {
+            try {
+                if (this.lastBlockNum != Tower.status.latestBlock) {
+                    this.lastBlockNum = Tower.status.latestBlock;
+                }
+            } catch (e) {}
+
+            var displayLimit, promizes = [], rows = [], _this = this;
+
+            if ( (this.lastBlockNum < this.BLOCKS_TO_SHOW) && (this.lastBlockNum >= 0) ) {
+                displayLimit = this.lastBlockNum + 1;
+            } else {
+                displayLimit = this.BLOCKS_TO_SHOW;
+            }
+
+            _.times(displayLimit,
+                function(n) {
+                    promizes.push(
+                        utils.load({
+                            url: _this.url,
+                            data: { number: _this.lastBlockNum - n },
+                            complete: function(res) {
+                                rows.push( {
+                                    num: res.number,
+                                    txCount: res.txCount,
+                                } );
+                            }
+                        })
+                    );
+                });
+
+            Promise.all(promizes).then(function() {
+                var rowsOut = [];
+                rows = _.sortBy(rows, function(o) { return o.num; }).reverse();
+
+                _.each(rows, function(b, index) {
+                    rowsOut.push( _this.templateRow({ block: b }) );
+                });
+
+                $('#widget-' + _this.shell.id).html( _this.template({ rows: rowsOut.join('') }) );
+
+                _this.postFetch();
+            });
+        }
+
+    };
 
 
 	var widget = _.extend({}, widgetRoot, extended);

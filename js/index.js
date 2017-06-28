@@ -17,6 +17,11 @@ import common from './common';
 
 import './vendor/stomp.min'
 import './vendor/client'
+import utils from './utils';
+
+window.utils = utils;
+window.moment = moment;
+
 
 window.Tower = {
 	ready: false,
@@ -46,7 +51,7 @@ window.Tower = {
 	    Dashboard.preregisterWidgets({
 
 	    	'chaincodelist'		: require('./widgets/chaincodelist'),
-			'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
+			// 'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
 			'metrix_block_min'	: require('./widgets/metrix_block_min'),
 			'metrix_txn_sec'	: require('./widgets/metrix_txn_sec'),
 			'metrix_txn_min'	: require('./widgets/metrix_txn_min'),
@@ -70,7 +75,7 @@ window.Tower = {
         Tower.stomp_subscriptions = Client._stomp_subscriptions;
 
 		//open first section - channel
-		Tower.section['channel']();
+		Tower.section['default']();
 	},
 
 	//define the sections
@@ -96,7 +101,26 @@ window.Tower = {
 				});
 			});
 
-			alert('I am frist !!!!!');
+
+            var statusUpdate = function(response) {
+                var status = response;
+
+                utils.prettyUpdate(Tower.status.peerCount, status.peerCount, $('#default-peers'));
+                utils.prettyUpdate(Tower.status.latestBlock, status.latestBlock, $('#default-blocks'));
+                utils.prettyUpdate(Tower.status.txCount, status.txCount, $('#default-txn'));
+                utils.prettyUpdate(Tower.status.chaincodeCount, status.chaincodeCount, $('#default-chaincode'));
+
+                Tower.status = status;
+
+                // Tower Control becomes ready only after the first status is received from the server
+                if (!Tower.ready) {
+                    Tower.isReady();
+                }
+
+                Dashboard.Utils.emit('node-status|announce');
+            };
+
+            utils.subscribe('/topic/metrics/status', statusUpdate);
 
 		},
 
@@ -122,7 +146,7 @@ window.Tower = {
 				{ widgetId: 'metrix_txn_sec' ,data: data},
 				{ widgetId: 'metrix_txn_min' ,data: data},
 				{ widgetId: 'metrix_block_min' ,data: data},
-				{ widgetId: 'metrix_choc_tx' ,data: data},
+				// { widgetId: 'metrix_choc_tx' ,data: data},
 				{ widgetId: 'chaincodelist' ,data: data},
 
 				/*{ widgetId: 'misc' },
