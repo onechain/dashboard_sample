@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "655ceac69e9dd873705d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f49218dda57f1493d889"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -711,14 +711,19 @@
 
 	__webpack_require__(142);
 
-	__webpack_require__(221);
-
 	__webpack_require__(222);
 
-	__webpack_require__(220);
+	__webpack_require__(223);
+
+	__webpack_require__(221);
+
+	var _common = __webpack_require__(203);
+
+	var _common2 = _interopRequireDefault(_common);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// import this first because it sets a global all the rest of the widgets need
 	window.Tower = {
 		ready: false,
 		current: null,
@@ -745,16 +750,16 @@
 
 			Dashboard.preregisterWidgets({
 
-				'chaincodelist': __webpack_require__(205),
-				'metrix_choc_tx': __webpack_require__(212),
-				'metrix_block_min': __webpack_require__(211),
-				'metrix_txn_sec': __webpack_require__(214),
-				'metrix_txn_min': __webpack_require__(213),
-				'peerlist': __webpack_require__(216),
-				'blockview': __webpack_require__(204),
-				'blocklist': __webpack_require__(203),
+				'chaincodelist': __webpack_require__(206),
+				'metrix_choc_tx': __webpack_require__(213),
+				'metrix_block_min': __webpack_require__(212),
+				'metrix_txn_sec': __webpack_require__(215),
+				'metrix_txn_min': __webpack_require__(214),
+				'peerlist': __webpack_require__(217),
+				'blockview': __webpack_require__(205),
+				'blocklist': __webpack_require__(204),
 				'blockinfo': __webpack_require__(202),
-				'txdetail': __webpack_require__(217)
+				'txdetail': __webpack_require__(218)
 
 				/*'lab'				: require('./widgets/lab'),
 	    'info'			: require('./widgets/info'),
@@ -765,12 +770,29 @@
 	    'weather'			: require('./widgets/weather')*/
 			});
 
-			//open first section - console
-			Tower.section['channel']();
+			//open first section - channel
+			Tower.section['default']();
 		},
 
 		//define the sections
 		section: {
+
+			'default': function _default() {
+
+				_jquery2.default.when(_common2.default.load({ url: 'monitordata/default.json' })).done(function (response) {
+					statusUpdate(response);
+				}).fail(function () {
+					statusUpdate({
+						status: 'DOWN',
+						peerCount: 'n/a',
+						latestBlock: 'n/a',
+						pendingTxn: 'n/a'
+					});
+				});
+
+				alert('I am frist !!!!!');
+			},
+
 			'channel': function channel() {
 				// data that the widgets will use
 				var data = {
@@ -781,7 +803,8 @@
 
 					// the array of widgets that belong to the section,
 					// these were preregistered in init() because they are unique
-				};var widgets = [{ widgetId: 'blockinfo', data: data }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data }, { widgetId: 'metrix_choc_tx', data: data }, { widgetId: 'chaincodelist', data: data }];
+
+				};var widgets = [{ widgetId: 'blockinfo' }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data }, { widgetId: 'metrix_choc_tx', data: data }, { widgetId: 'chaincodelist', data: data }];
 
 				// opens the section and pass in the widgets that it needs
 				Dashboard.showSection('peers', widgets);
@@ -818,7 +841,7 @@
 				//iterate over the data, creating a new widget for each item
 				_.each(userlist, function (user, key) {
 					var widget = {};
-					widget[key + '-user'] = __webpack_require__(218);
+					widget[key + '-user'] = __webpack_require__(219);
 					Dashboard.preregisterWidgets(widget);
 
 					widgets = widgets.concat([{
@@ -837,9 +860,6 @@
 		}
 	};
 
-	// import this first because it sets a global all the rest of the widgets need
-
-
 	(0, _jquery2.default)(function () {
 		(0, _jquery2.default)(window).on('scroll', function (e) {
 			if ((0, _jquery2.default)(window).scrollTop() > 50) {
@@ -852,7 +872,7 @@
 		// logo handler
 		(0, _jquery2.default)("a.tower-logo").click(function (e) {
 			e.preventDefault();
-			(0, _jquery2.default)("#console").click();
+			(0, _jquery2.default)("#channel").click();
 		});
 
 		// Menu (burger) handler
@@ -85940,42 +85960,42 @@
 	var map = {
 		"./blockinfo": 202,
 		"./blockinfo.js": 202,
-		"./blocklist": 203,
-		"./blocklist.js": 203,
-		"./blockview": 204,
-		"./blockview.js": 204,
-		"./chaincodelist": 205,
-		"./chaincodelist.js": 205,
-		"./controls": 206,
-		"./controls.js": 206,
-		"./date": 207,
-		"./date.js": 207,
-		"./form": 208,
-		"./form.js": 208,
-		"./info": 209,
-		"./info.js": 209,
-		"./lab": 210,
-		"./lab.js": 210,
-		"./metrix_block_min": 211,
-		"./metrix_block_min.js": 211,
-		"./metrix_choc_tx": 212,
-		"./metrix_choc_tx.js": 212,
-		"./metrix_txn_min": 213,
-		"./metrix_txn_min.js": 213,
-		"./metrix_txn_sec": 214,
-		"./metrix_txn_sec.js": 214,
-		"./misc": 215,
-		"./misc.js": 215,
-		"./peerlist": 216,
-		"./peerlist.js": 216,
-		"./txdetail": 217,
-		"./txdetail.js": 217,
-		"./user": 218,
-		"./user.js": 218,
-		"./weather": 219,
-		"./weather.js": 219,
-		"./widget-root": 220,
-		"./widget-root.js": 220
+		"./blocklist": 204,
+		"./blocklist.js": 204,
+		"./blockview": 205,
+		"./blockview.js": 205,
+		"./chaincodelist": 206,
+		"./chaincodelist.js": 206,
+		"./controls": 207,
+		"./controls.js": 207,
+		"./date": 208,
+		"./date.js": 208,
+		"./form": 209,
+		"./form.js": 209,
+		"./info": 210,
+		"./info.js": 210,
+		"./lab": 211,
+		"./lab.js": 211,
+		"./metrix_block_min": 212,
+		"./metrix_block_min.js": 212,
+		"./metrix_choc_tx": 213,
+		"./metrix_choc_tx.js": 213,
+		"./metrix_txn_min": 214,
+		"./metrix_txn_min.js": 214,
+		"./metrix_txn_sec": 215,
+		"./metrix_txn_sec.js": 215,
+		"./misc": 216,
+		"./misc.js": 216,
+		"./peerlist": 217,
+		"./peerlist.js": 217,
+		"./txdetail": 218,
+		"./txdetail.js": 218,
+		"./user": 219,
+		"./user.js": 219,
+		"./weather": 220,
+		"./weather.js": 220,
+		"./widget-root": 221,
+		"./widget-root.js": 221
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -85997,6 +86017,12 @@
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
 
+	var _common = __webpack_require__(203);
+
+	var _common2 = _interopRequireDefault(_common);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	module.exports = function (id) {
 		var extended = {
 			name: 'blockinfo',
@@ -86006,11 +86032,12 @@
 
 			hideLink: true,
 
-			customButtons: '<li><i class="add-account fa fa-expand"></i></li><li><i class="add-account fa fa-compress"></i></li>',
+			customButtons: '<li><i class="add-account fa fa-expand"></i></li>',
 
-			template: _.template('<div class="info-table"> <table class="table table-striped"> ' + '' + '<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href=""><%= url %></a></td> </tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
+			template: _.template('<div class="info-table"> <table class="table table-striped"> ' + '' + '<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href="">11111</a></td> </tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
 
 			init: function init(data) {
+
 				Dashboard.Utils.emit('widget|init|' + this.name);
 
 				if (data) {
@@ -86048,11 +86075,17 @@
 					'overflow-x': 'hidden',
 					'width': '100%'
 				}).html(this.template({
-					app: this.data.appName,
-					desc: this.data.description,
-					numUser: this.data.numUser,
-					url: this.data.url
+					app: 'test1',
+					desc: 'testdata1',
+					numUser: 'dddd'
 				}));
+
+				var _this = this;
+				$('#widget-shell-' + _this.shell.id + ' i.add-account').click(function (e) {
+					$.when().done(function () {
+						openblockdetail('12');
+					});
+				});
 
 				this.postRender();
 				$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + this.name]);
@@ -86070,6 +86103,164 @@
 /* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function($, _, jQuery) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _stringify = __webpack_require__(178);
+
+	var _stringify2 = _interopRequireDefault(_stringify);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+		load: function load(opts) {
+			var config = {
+				headers: {
+					'janus_user': 'V442113'
+				},
+				type: opts.method ? opts.method : 'POST',
+				url: opts.url,
+				contentType: opts.type ? opts.type : 'application/json',
+				cache: false,
+				async: true
+			};
+
+			if (opts.data) {
+				config.data = (0, _stringify2.default)(opts.data);
+			}
+
+			if (opts.complete) {
+				config.complete = opts.complete;
+			}
+
+			return $.ajax(config);
+		},
+
+		prettyUpdate: function prettyUpdate(oldValue, newValue, el) {
+			if (oldValue !== newValue) {
+				el.css({
+					'opacity': 0
+				});
+
+				setTimeout(function () {
+					el.html($('<span>', {
+						html: newValue
+					}));
+
+					el.css({
+						'opacity': 1
+					});
+				}, 500);
+			}
+		},
+
+		prettyMoneyPrint: function prettyMoneyPrint(val) {
+			if (val) {
+				var sign = '';
+
+				if (val < 0) {
+					sign = '-';
+				}
+
+				return sign + '$' + Math.abs(val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+			}
+		},
+
+		capitalize: function capitalize(str) {
+			return str.charAt(0).toUpperCase() + str.slice(1);
+		},
+
+		camelToRegularForm: function camelToRegularForm(t) {
+			var ret = t.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3').replace(/^./, function (str) {
+				return str.toUpperCase();
+			});
+
+			if (ret.toLowerCase() === 'id' || ret.toLowerCase() === 'url' || ret.toLowerCase() === 'txn' || ret.toLowerCase() === 'abi') {
+				ret = ret.toUpperCase();
+			} else if (ret.toLowerCase().indexOf(' url') >= 0) {
+				ret = ret.substring(0, ret.indexOf(' Url')) + ' URL' + ret.substring(ret.indexOf(' Url') + 4, ret.indexOf(' Url').length);
+			} else if (ret.toLowerCase().indexOf(' txn') >= 0) {
+				ret = ret.substring(0, ret.indexOf(' Txn')) + ' TXN' + ret.substring(ret.indexOf(' Txn') + 4, ret.indexOf(' Txn').length);
+			} else if (ret.toLowerCase().indexOf(' id') >= 0) {
+				ret = ret.substring(0, ret.indexOf(' Id')) + ' ID' + ret.substring(ret.indexOf(' Id') + 4, ret.indexOf(' Id').length);
+			}
+
+			return ret;
+		},
+
+		idAlwaysFirst: function idAlwaysFirst(arr) {
+			// remove ID from wherever it is, and make it first
+			arr = _.without(arr, 'id');
+
+			// insert ID as first element
+			arr.splice(0, 0, 'id');
+
+			return arr;
+		},
+
+		makeAreaEditable: function makeAreaEditable(selector) {
+			$(selector).click(function (e) {
+				var isEditable = !!$(this).prop('contentEditable');
+				$(this).prop('contentEditable', isEditable);
+
+				$(this).focus();
+
+				$(this).selectText();
+			});
+		},
+
+		copyToClipboard: function copyToClipboard(e) {
+			var t = e.target,
+			    c = t.dataset.copytarget,
+			    inp = c ? document.querySelector(c) : null;
+
+			// is element selectable?
+			if (inp && inp.select) {
+				// select text
+				inp.select();
+
+				try {
+					// copy text
+					document.execCommand('copy');
+					inp.blur();
+				} catch (err) {}
+			}
+		},
+
+		truncAddress: function truncAddress(addr) {
+			var len = addr.startsWith('0x') ? 10 : 8;
+
+			return addr.substring(0, len);
+		}
+	};
+
+
+	jQuery.fn.selectText = function () {
+		var doc = document,
+		    element = this[0];
+
+		if (doc.body.createTextRange) {
+			var range = document.body.createTextRange();
+			range.moveToElementText(element);
+			range.select();
+		} else if (window.getSelection) {
+			var selection = window.getSelection(),
+			    range = document.createRange();
+
+			range.selectNodeContents(element);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4), __webpack_require__(5)))
+
+/***/ }),
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
 
 	module.exports = function (id) {
@@ -86081,7 +86272,7 @@
 
 			hideLink: true,
 
-			template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' + '<thead style="font-weight: bold;"><tr><td style="width:60px;">Block</td><td>Age</td><td style="width:45px;">TXNs</td></tr></thead>' + '<tbody><tr> <td>App Name</td> <td><%= app %></td><td><%= app %></td> </tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td><td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href=""><%= url %></a></td><td><a href=""><%= url %></a></td> </tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
+			template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' + '<thead style="font-weight: bold;"><tr><td>Block</td><td>TXNs</td></tr></thead>' + '<tbody><tr> <td>App Name</td> <td><%= app %></td></tr>' + '<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' + '<tr> <td>URL</td> <td><a href=""><%= url %></a></td></tr>' + '<tr> <td>Description</td> <td><%=desc%> </td> </tr>' + '</tbody> </table> <div>'),
 
 			init: function init(data) {
 				Dashboard.Utils.emit('widget|init|' + this.name);
@@ -86140,7 +86331,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86213,7 +86404,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86286,7 +86477,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86326,7 +86517,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86386,7 +86577,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86426,7 +86617,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86499,7 +86690,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86559,7 +86750,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86606,7 +86797,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86648,7 +86839,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86695,7 +86886,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
@@ -86742,7 +86933,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86780,7 +86971,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86853,7 +87044,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86926,7 +87117,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -86998,7 +87189,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_, $) {'use strict';
@@ -87038,7 +87229,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(5)))
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -87132,7 +87323,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -87202,7 +87393,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(_) {'use strict';

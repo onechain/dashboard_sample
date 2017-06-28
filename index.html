@@ -36,13 +36,13 @@
 					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 						<div class="dropdown-arrow"><div class="arrow-up"></div></div>
 						<ul>
-							<li class="dropdown-item" href="#"><h4>CHANNELS</li></h4>
+							<li class="dropdown-item" href="#"><h4>CHANNELS</h4></li>
 							<hr />
-							<li id="reset" class="dropdown-item" href="#">CHANNEL1</li>
-							<li id="reset" class="dropdown-item" href="#">CHANNEL2</li>
-							<li id="reset" class="dropdown-item" href="#">CHANNEL3</li>
-							<li id="reset" class="dropdown-item" href="#">CHANNEL4</li>
-							<li id="reset" class="dropdown-item" href="#">CHANNEL5</li>
+							<li id="reset" class="dropdown-item" href="#" channeldata="CHANNEL1">CHANNEL1</li>
+							<li id="reset2" class="dropdown-item" href="#" channeldata="CHANNEL2">CHANNEL2</li>
+							<li id="reset3" class="dropdown-item" href="#" channeldata="CHANNEL3">CHANNEL3</li>
+							<li id="reset4" class="dropdown-item" href="#" channeldata="CHANNEL4">CHANNEL4</li>
+							<li id="reset5" class="dropdown-item" href="#" channeldata="CHANNEL5">CHANNEL5</li>
 						</ul>
 					</div>
 				</div>
@@ -137,7 +137,7 @@
 
 	function openblockdetail(blockid){
 
-		var titleinfo = " info  ["+blockid+"] message ";
+		var titleinfo = " #["+blockid+"]";
 
 		$.layer({
 
