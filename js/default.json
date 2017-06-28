@@ -3,7 +3,9 @@
     "id": "sadf12341rfcvf231234dwed23r13d13d1d32rd13d13$#$312f31",
     "type": "channels",
     "attributes": {
-      "currchannel": "channeltest1"
+      "currchannel": "channeltest1",
+      "allchannels":["c1","c2"],
+      "lastblocknum":43321
     }
   },
   "meta": {
