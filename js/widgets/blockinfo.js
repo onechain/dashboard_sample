@@ -46,7 +46,7 @@ module.exports = function(id) {
 
 
 				//Dashboard.render.widget(_this.name, _this.shell.tpl);
-				alert('I am blockinfo !!!!!'+_this.data.c.currchannel);
+				//alert('I am blockinfo !!!!!'+_this.data.c.currchannel);
 				_this.title = 'Block #' + _this.data.a;
 
 				$('#widget-' + _this.shell.id).css({

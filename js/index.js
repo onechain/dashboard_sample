@@ -89,8 +89,9 @@ window.Tower = {
 			};
 
 			$.when(
-				common.load({ url: 'monitordata/default.json' })
+				common.load({ url: 'default.json' })
 			).done(function(response) {
+				alert(' I am default');
 				statusUpdate(response);
 			}).fail(function() {
 				statusUpdate({
@@ -138,7 +139,7 @@ window.Tower = {
 
 			var widgets = [
 
-				{ widgetId: 'blockinfo'},
+				{ widgetId: 'blockinfo',data: {a:'ddd',b:'bbb'}},
 				{ widgetId: 'blocklist' ,data: data},
 				{ widgetId: 'blockview' ,data: data},
 				{ widgetId: 'txdetail'  ,data: data},
