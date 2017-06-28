@@ -9,7 +9,7 @@ module.exports = function(id) {
 
 		hideLink: true,
 
-		customButtons: '<li><i class="add-account fa fa-expand"></i></li>',
+		customButtons: '<li><i class="show_detail fa fa-expand"></i></li>',
 
 		template: _.template('<div class="info-table"> <table class="table table-striped"> ' +
 			''+
@@ -19,71 +19,68 @@ module.exports = function(id) {
 			'<tr> <td>Description</td> <td><%=desc%> </td> </tr>' +
 			'</tbody> </table> <div>'),
 
-
-		init: function(data) {
-
-
-			Dashboard.Utils.emit('widget|init|' + this.name);
-
-			if (data) {
-				this.setData(data);
-			}
-
-			this.shell = Dashboard.TEMPLATES.widget({
-				name: this.name,
-				title: this.title,
-				size: this.size,
-				hideLink: this.hideLink,
-				hideRefresh: this.hideRefresh,
-				customButtons: this.customButtons,
-				details: true
-			});
-
-			this.initialized = true;
-
-			Dashboard.Utils.emit('widget|ready|' + this.name);
-
-			this.ready();
-
-			Dashboard.Utils.emit('widget|render|' + this.name);
-
-			this.subscribe();
+		setData: function(data) {
+			this.data = data;
 
 
-
+			this.title = 'Block #' + this.data.a;
 		},
 
 
-		render: function() {
-			Dashboard.render.widget(this.name, this.shell.tpl);
-			this.fetch();
 
-			$('#widget-' + this.shell.id).css({
-				'height': '240px',
-				'margin-bottom': '10px',
-				'overflow-x': 'hidden',
-				'width': '100%'
-			}).html( this.template({
-				app: 'test1',
-				desc: 'testdata1',
-				numUser: 'dddd'
-			}) );
+		fetch: function() {
+
 
 			var _this = this;
-			$('#widget-shell-' + _this.shell.id + ' i.add-account').click(function(e) {
-				$.when(
 
-				).done(function() {
-					openblockdetail('12');
+			$.when(
+
+
+
+
+			).fail(function (res) {
+
+
+
+			}).done(function (res) {
+
+
+				//Dashboard.render.widget(_this.name, _this.shell.tpl);
+				alert('I am blockinfo !!!!!'+_this.data.c.currchannel);
+				_this.title = 'Block #' + _this.data.a;
+
+				$('#widget-' + _this.shell.id).css({
+					'height': '240px',
+					'margin-bottom': '10px',
+					'overflow-x': 'hidden',
+					'width': '100%'
+				}).html( _this.template({
+					app: 'test1',
+					desc: 'testdata1',
+					numUser: 'dddd'
+				}) );
+				$('#widget-shell-' + _this.shell.id + ' .panel-title span').html(_this.title);
+
+				$('#widget-shell-' + _this.shell.id + ' i.add-account').click(function(e) {
+
+					$.when(
+
+					).done(function() {
+						openblockdetail('12');
+					});
+
 				});
 
-			});
+				_this.postRender();
+				$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + _this.name]);
 
-			this.postRender();
-			$(document).trigger("WidgetInternalEvent", ["widget|rendered|" + this.name]);
+
+			})
 
 
 		},
+
+
 	};
 
 

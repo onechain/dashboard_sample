@@ -78,6 +78,11 @@ window.Tower = {
 
 		'default':function () {
 
+			var statusUpdate = function(response) {
+
+				Tower._currentchannel = response.data.currchannel;
+			};
+
 			$.when(
 				common.load({ url: 'monitordata/default.json' })
 			).done(function(response) {
