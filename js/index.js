@@ -15,6 +15,9 @@ import './widgets/widget-root';
 
 import common from './common';
 
+import './vendor/stomp.min'
+import './vendor/client'
+
 window.Tower = {
 	ready: false,
 	current: null,
@@ -62,8 +65,12 @@ window.Tower = {
 		  'weather'			: require('./widgets/weather')*/
 		});
 
+        // Reusing socket from cakeshop.js
+        Tower.stomp = Client.stomp;
+        Tower.stomp_subscriptions = Client._stomp_subscriptions;
+
 		//open first section - channel
-		Tower.section['default']();
+		Tower.section['channel']();
 	},
 
 	//define the sections
