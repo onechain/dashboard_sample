@@ -1,22 +1,36 @@
 
 module.exports = function(id) {
 	var extended = {
-		name: 'blockinfo',
-		title: 'blockinfo',
-		size: 'medium',
+		name: 'blockview',
+		title: 'Blockview',
+		size: 'small',
 		widgetId: id, //needed for dashboard
 
 		hideLink: true,
 
-		customButtons: '<li><i class="add-account fa fa-expand"></i></li><li><i class="add-account fa fa-compress"></i></li>',
 
-		template: _.template('<div class="info-table"> <table class="table table-striped"> ' +
-			''+
-			'<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' +
-			'<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' +
-			'<tr> <td>URL</td> <td><a href=""><%= url %></a></td> </tr>' +
-			'<tr> <td>Description</td> <td><%=desc%> </td> </tr>' +
-			'</tbody> </table> <div>'),
+		template: _.template(
+			'  <div class="form-group">' +
+			'    <label for="block-id">Identifier [number, hash, tag]</label>' +
+			'    <input type="text" class="form-control" id="block-id">' +
+			'  </div>'+
+			'  <div class="radio">' +
+			'    <label>' +
+			'      <input type="radio" id="searchType" name="searchType" value="block" checked="checked"/>' +
+			'      Block' +
+			'    </label>' +
+			'  </div>' +
+			'  <div class="radio">' +
+			'    <label>' +
+			'      <input type="radio" id="searchType" name="searchType" value="txn"/>' +
+			'      Transaction' +
+			'    </label>' +
+			'  </div>' +
+			'  <div class="form-group pull-right">' +
+			'    <button type="button" class="btn btn-primary">Find</button>' +
+			'  </div>'+
+			'  <div id="notification">' +
+			'  </div>'),
 
 		init: function(data) {
 			Dashboard.Utils.emit('widget|init|' + this.name);

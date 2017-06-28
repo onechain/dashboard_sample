@@ -1,14 +1,12 @@
 
 module.exports = function(id) {
 	var extended = {
-		name: 'blockinfo',
-		title: 'blockinfo',
+		name: 'txdetail',
+		title: 'Txdetail',
 		size: 'medium',
 		widgetId: id, //needed for dashboard
 
 		hideLink: true,
-
-		customButtons: '<li><i class="add-account fa fa-expand"></i></li><li><i class="add-account fa fa-compress"></i></li>',
 
 		template: _.template('<div class="info-table"> <table class="table table-striped"> ' +
 			''+
