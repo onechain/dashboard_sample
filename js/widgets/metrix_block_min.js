@@ -1,4 +1,4 @@
-import client from '../vendor/client';
+import utils from '../utils';
 
 module.exports = function(id) {
 	var extended = {
@@ -8,10 +8,10 @@ module.exports = function(id) {
 		widgetId: id, //needed for dashboard
 
 		hideLink: true,
-        topic: '/topic/metrics/blocksPerMin',
+        topic: '/topic/metrics/blockPerMinMeter',
 
         subscribe: function() {
-            Client.subscribe(this.topic, this.onData);
+            utils.subscribe(this.topic, this.onData);
         },
 
 		fetch: function() {
@@ -28,18 +28,16 @@ module.exports = function(id) {
 		},
 
 		onData: function(data) {
-			console.info(data)
-            /*data = data.data.attributes;
 
-            if (!data || !data.result) {
+            if (!data) {
                 return;
             }
 
             var b = {
-                time: data.result.timestamp,
-                y: data.result.value
+                time: data.timestamp,
+                y: data.value
             };
-            widget.chart.push([ b ]);*/
+            widget.chart.push([ b ]);
 		},
 	};
 

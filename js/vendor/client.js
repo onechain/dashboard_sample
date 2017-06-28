@@ -66,7 +66,7 @@
                 if (Client.connected) {
                     console.log("Lost STOMP connection", err);
                 }
-                // setTimeout(Client.connect, 1000); // always reconnect
+                setTimeout(Client.connect, 1000); // always reconnect
             }
         );
 	};
