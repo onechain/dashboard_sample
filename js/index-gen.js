@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0eb053b0fe3b5cb7301c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f202a12558ed1d5ee752"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -764,7 +764,7 @@
 			Dashboard.preregisterWidgets({
 
 				'chaincodelist': __webpack_require__(246),
-				// 'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
+				//'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
 				'metrix_block_min': __webpack_require__(252),
 				'metrix_txn_sec': __webpack_require__(256),
 				'metrix_txn_min': __webpack_require__(255),
@@ -796,15 +796,40 @@
 
 			'default': function _default() {
 
-				var statusUpdate = function statusUpdate(response) {
+				var templatecheenltab = _.template('<li class="dropdown-item" href="#"><h4>CHANNELS</h4></li>' + '<hr />' + '<%=selecthtml%>');
+				var templatecheenl = _.template('<li id="channelselectitem<%=indexid%>" class="dropdown-item" href="#" eventflag="channleselectfun" channeldata="<%=channlename%>"><%=channlename%></li>');
 
-					Tower._currentchannel = response.data.currchannel;
-				};
+				_jquery2.default.when(_common2.default.load({ url: 'default.json' }) //channellist
+				//common.load({ url: 'default.json' })//curchannel
 
-				_jquery2.default.when(_common2.default.load({ url: 'default.json' })).done(function (response) {
-					alert(' I am default');
+				).done(function (response) {
+
+					//response[0]
+					//response[1]
+
 					statusUpdate(response);
+
+					var channelsel = [];
+
+					var channels = JSON.parse(response).data.attributes.allchannels;
+
+					var ind = 1;
+					for (var item in channels) {
+
+						channelsel.push(templatecheenl({ channlename: item, indexid: ind }));
+						ind++;
+					}
+
+					(0, _jquery2.default)('#selectchannel').html(templatecheenltab({ selecthtml: channelsel.join('') }));
+
+					(0, _jquery2.default)("[eventflag='channleselectfun']").on('click', function (event) {
+
+						alert((0, _jquery2.default)(event.currentTarget).attr('channeldata'));
+					});
 				}).fail(function () {
+
+					alert(' I am default');
+
 					statusUpdate({
 						status: 'DOWN',
 						peerCount: 'n/a',
@@ -814,6 +839,7 @@
 				});
 
 				var statusUpdate = function statusUpdate(response) {
+
 					var status = response;
 
 					_utils2.default.prettyUpdate(Tower.status.peerCount, status.peerCount, (0, _jquery2.default)('#default-peers'));
@@ -845,7 +871,7 @@
 					// the array of widgets that belong to the section,
 					// these were preregistered in init() because they are unique
 
-				};var widgets = [{ widgetId: 'blockinfo' }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data },
+				};var widgets = [{ widgetId: 'blockinfo', data: { a: 'ddd', b: 'bbb' } }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data },
 				// { widgetId: 'metrix_choc_tx' ,data: data},
 				{ widgetId: 'chaincodelist', data: data }];
 
@@ -925,12 +951,9 @@
 			(0, _jquery2.default)('.tower-body-wrapper').toggleClass('tower-nav-min');
 		});
 
-		(0, _jquery2.default)('#reset').on('click', function () {
-			Dashboard.reset();
-		});
-
 		// Navigation menu handler
 		(0, _jquery2.default)('.tower-sidebar li').click(function (e) {
+
 			var id = (0, _jquery2.default)(this).attr('id');
 
 			e.preventDefault();
@@ -86094,7 +86117,7 @@
 				$.when().fail(function (res) {}).done(function (res) {
 
 					//Dashboard.render.widget(_this.name, _this.shell.tpl);
-					alert('I am blockinfo !!!!!' + _this.data.c.currchannel);
+					alert('I am blockinfo !!!!!');
 					_this.title = 'Block #' + _this.data.a;
 
 					$('#widget-' + _this.shell.id).css({

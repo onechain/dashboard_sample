@@ -80,12 +80,13 @@ module.exports = function(id) {
                 rows = _.sortBy(rows, function(o) { return o.num; }).reverse();
 
                 _.each(rows, function(b, index) {
-                    rowsOut.push( _this.templateRow({ block: b }) );
+                    rowsOut.push( _this.templateRow( { block: b } ) );
                 });
 
                 $('#widget-' + _this.shell.id).html( _this.template({ rows: rowsOut.join('') }) );
 
                 _this.postFetch();
+
             });
         }
 

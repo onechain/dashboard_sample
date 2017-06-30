@@ -51,7 +51,7 @@ window.Tower = {
 	    Dashboard.preregisterWidgets({
 
 	    	'chaincodelist'		: require('./widgets/chaincodelist'),
-			// 'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
+			//'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
 			'metrix_block_min'	: require('./widgets/metrix_block_min'),
 			'metrix_txn_sec'	: require('./widgets/metrix_txn_sec'),
 			'metrix_txn_min'	: require('./widgets/metrix_txn_min'),
@@ -62,12 +62,12 @@ window.Tower = {
 			'txdetail'			: require('./widgets/txdetail'),
 
 			/*'lab'				: require('./widgets/lab'),
-		  'info'			: require('./widgets/info'),
-	      'form'            : require('./widgets/form'),
-	      'misc'            : require('./widgets/misc'),
-		  'date'			: require('./widgets/date'),
-		  'controls'		: require('./widgets/controls'),
-		  'weather'			: require('./widgets/weather')*/
+			  'info'			: require('./widgets/info'),
+			  'form'            : require('./widgets/form'),
+			  'misc'            : require('./widgets/misc'),
+			  'date'			: require('./widgets/date'),
+			  'controls'		: require('./widgets/controls'),
+			  'weather'			: require('./widgets/weather')*/
 		});
 
         // Reusing socket from cakeshop.js
@@ -83,28 +83,66 @@ window.Tower = {
 
 		'default':function () {
 
-			var statusUpdate = function(response) {
+			var templatecheenltab = _.template('<li class="dropdown-item" href="#"><h4>CHANNELS</h4></li>'+
+								'<hr />'+
+								'<%=selecthtml%>');
+			var templatecheenl = _.template('<li id="channelselectitem<%=indexid%>" class="dropdown-item" href="#" eventflag="channleselectfun" channeldata="<%=channlename%>"><%=channlename%></li>');
 
-				Tower._currentchannel = response.data.currchannel;
-			};
 
 			$.when(
-				common.load({ url: 'default.json' })
+
+				utils.load({ url: 'default.json' }),//channellist
+				//common.load({ url: 'default.json' })//curchannel
+
 			).done(function(response) {
-				alert(' I am default');
+
+				//response[0]
+				//response[1]
+
 				statusUpdate(response);
+
+				var channelsel = [];
+
+				var channels = JSON.parse(response).data.attributes.allchannels;
+
+				var ind = 1;
+				for(var item in channels) {
+
+					channelsel.push( templatecheenl( { channlename: item ,indexid:ind} ) );
+					ind++;
+				}
+
+				$('#selectchannel').html( templatecheenltab({ selecthtml: channelsel.join('') }) );
+
+
+				$("[eventflag='channleselectfun']").on('click', function(event) {
+
+
+
+						//alert( $(event.currentTarget).attr('channeldata') );
+
+
+				})
+
+
+
 			}).fail(function() {
+
+				//alert(' I am default');
+
 				statusUpdate({
 					status: 'DOWN',
 					peerCount: 'n/a',
 					latestBlock: 'n/a',
 					pendingTxn: 'n/a'
 				});
+
 			});
 
 
             var statusUpdate = function(response) {
-                var status = response;
+
+            	var status = response;
 
                 utils.prettyUpdate(Tower.status.peerCount, status.peerCount, $('#default-peers'));
                 utils.prettyUpdate(Tower.status.latestBlock, status.latestBlock, $('#default-blocks'));
@@ -119,6 +157,8 @@ window.Tower = {
                 }
 
                 Dashboard.Utils.emit('node-status|announce');
+
+
             };
 
             utils.subscribe('/topic/metrics/status', statusUpdate);
@@ -240,13 +280,12 @@ $(function() {
 	});
 
 
-	$('#reset').on('click', function() {
-		Dashboard.reset();
-	})
+
 
 
 	// Navigation menu handler
 	$('.tower-sidebar li').click(function(e) {
+
 		var id = $(this).attr('id');
 
 		e.preventDefault();
@@ -259,6 +298,8 @@ $(function() {
 		Tower.section[Tower.current]();
 
 		$('.tower-page-title').html( $('<span>', { html: $(this).find('.tower-sidebar-item').html() }) );
+
+
 
 	});
 
