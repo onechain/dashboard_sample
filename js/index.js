@@ -3,7 +3,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'd3';
 import 'jquery-ui';
-//.import 'epoch-charting-ie-patched';
+import 'epoch-charting-ie-patched';
 import moment from 'moment';
 
 import 'jif-dashboard/dashboard-core'

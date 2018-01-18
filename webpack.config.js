@@ -20,6 +20,9 @@ module.exports = {
 	  stats: 'errors-only',
 	  port: 8081
   },
+    externals: [{
+        xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
+    }],
   plugins: [
     new webpack.ProvidePlugin({
       $: "jquery",
