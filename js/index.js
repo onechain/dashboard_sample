@@ -51,6 +51,7 @@ window.Tower = {
 	    Dashboard.preregisterWidgets({
 
 	    	'chaincodelist'		: require('./widgets/chaincodelist'),
+	    	'network'		: require('./widgets/network'),
 			//'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
 			'metrix_block_min'	: require('./widgets/metrix_block_min'),
 			'metrix_txn_sec'	: require('./widgets/metrix_txn_sec'),
@@ -189,6 +190,7 @@ window.Tower = {
 				{ widgetId: 'metrix_block_min' ,data: data},
 				// { widgetId: 'metrix_choc_tx' ,data: data},
 				{ widgetId: 'chaincodelist' ,data: data},
+				{ widgetId: 'network' ,data: data},
 
 				/*{ widgetId: 'misc' },
 				{ widgetId: 'lab' },
