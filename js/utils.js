@@ -1,5 +1,5 @@
 export default {
-    load: function(opts) {
+    load: function (opts) {
         var config = {
             type: opts.method ? opts.method : 'POST',
             url: opts.url,
@@ -21,13 +21,13 @@ export default {
 
     subscribe: Client.subscribe,
 
-    prettyUpdate: function(oldValue, newValue, el) {
+    prettyUpdate: function (oldValue, newValue, el) {
         if (oldValue !== newValue) {
             el.css({
                 'opacity': 0
             });
 
-            setTimeout(function() {
+            setTimeout(function () {
                 el.html($('<span>', {
                     html: newValue
                 }));
@@ -37,6 +37,15 @@ export default {
                 });
             }, 500);
         }
+    },
+    showHead: function (targets) {
+        $("#heads-up > div").hide();
+        $("#heads-up > div").removeClass();
+        var l=12/targets.length
+        _.each(targets, function (target) {
+            $("#" + target).parent().parent().addClass("col-lg-"+l+" col-xs-6");
+            $("#" + target).parent().parent().show();
+        })
     }
 };
 
