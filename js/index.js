@@ -166,7 +166,41 @@ window.Tower = {
 
 		},
 
-		'channel': function() {
+
+        'network': function() {
+            // data that the widgets will use
+            var data = {
+                'numUser': 4,
+                'appName': 'sample app',
+                'url': 'hello.com',
+                'description': 'this is a description of the app.'
+            }
+
+            // the array of widgets that belong to the section,
+            // these were preregistered in init() because they are unique
+
+            var widgets = [
+
+
+                { widgetId: 'network' ,data: data},
+
+                /*{ widgetId: 'misc' },
+                { widgetId: 'lab' },
+                { widgetId: 'date' },
+                { widgetId: 'controls' },
+                { widgetId: 'weather' },
+                { widgetId: 'info' , data: data}, //data can be passed in
+                { widgetId: 'form' },*/
+
+            ];
+
+            // opens the section and pass in the widgets that it needs
+            Dashboard.showSection('peers1', widgets);
+        },
+
+
+
+        'channel': function() {
 			// data that the widgets will use
 			var data = {
 				'numUser': 4,
@@ -207,12 +241,12 @@ window.Tower = {
 		},
 
 		// a section using same widget template for multiple widgets
-		'user': function() {
+		'peers': function() {
 
 			// define the data
 			var userlist = {
 				'user1': {
-					'name'	: 'Admin',
+					'name'	: 'Admin1111',
 					'role'	: 'admin',
 					'id'	: 123
 				},
