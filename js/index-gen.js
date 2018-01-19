@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bd1044534611dc31d0a2"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "196e21b9fc6a8810c6a8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -738,244 +738,263 @@
 	window.moment = _moment2['default'];
 
 	window.Tower = {
-		ready: false,
-		current: null,
-		status: {},
+	    ready: false,
+	    current: null,
+	    status: {},
 
-		// Tower Control becomes ready only after the first status is received from the server
-		isReady: function isReady() {
-			Tower.ready = true;
+	    // Tower Control becomes ready only after the first status is received from the server
+	    isReady: function isReady() {
+	        Tower.ready = true;
 
-			// let everyone listening in know
-			Dashboard.Utils.emit('tower-control|ready|true');
+	        // let everyone listening in know
+	        Dashboard.Utils.emit('tower-control|ready|true');
 
-			return true;
-		},
+	        return true;
+	    },
 
-		init: function init() {
-			//set options for the Dashboard
-			Dashboard.setOptions({
-				'appName': 'onechain fabricexplorer'
-			});
+	    init: function init() {
+	        //set options for the Dashboard
+	        Dashboard.setOptions({
+	            'appName': 'onechain fabricexplorer'
+	        });
 
-			//initialize the Dashboard, set up widget container
-			Dashboard.init();
+	        //initialize the Dashboard, set up widget container
+	        Dashboard.init();
 
-			Dashboard.preregisterWidgets({
+	        Dashboard.preregisterWidgets({
 
-				'chaincodelist': __webpack_require__(320),
-				'network': __webpack_require__(332),
-				//'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
-				'metrix_block_min': __webpack_require__(326),
-				'metrix_txn_sec': __webpack_require__(330),
-				'metrix_txn_min': __webpack_require__(329),
-				'peerlist': __webpack_require__(439),
-				'blockview': __webpack_require__(319),
-				'blocklist': __webpack_require__(278),
-				'blockinfo': __webpack_require__(276),
-				'txdetail': __webpack_require__(440)
+	            'chaincodelist': __webpack_require__(320),
+	            'network': __webpack_require__(332),
+	            //'metrix_choc_tx'	: require('./widgets/metrix_choc_tx'),
+	            'metrix_block_min': __webpack_require__(326),
+	            'metrix_txn_sec': __webpack_require__(330),
+	            'metrix_txn_min': __webpack_require__(329),
+	            'peerlist': __webpack_require__(439),
+	            'blockview': __webpack_require__(319),
+	            'blocklist': __webpack_require__(278),
+	            'blockinfo': __webpack_require__(276),
+	            'txdetail': __webpack_require__(440)
 
-				/*'lab'				: require('./widgets/lab'),
-	     'info'			: require('./widgets/info'),
-	     'form'            : require('./widgets/form'),
-	     'misc'            : require('./widgets/misc'),
-	     'date'			: require('./widgets/date'),
-	     'controls'		: require('./widgets/controls'),
-	     'weather'			: require('./widgets/weather')*/
-			});
+	            /*'lab'				: require('./widgets/lab'),
+	              'info'			: require('./widgets/info'),
+	              'form'            : require('./widgets/form'),
+	              'misc'            : require('./widgets/misc'),
+	              'date'			: require('./widgets/date'),
+	              'controls'		: require('./widgets/controls'),
+	              'weather'			: require('./widgets/weather')*/
+	        });
 
-			// Reusing socket from cakeshop.js
-			Tower.stomp = Client.stomp;
-			Tower.stomp_subscriptions = Client._stomp_subscriptions;
+	        // Reusing socket from cakeshop.js
+	        Tower.stomp = Client.stomp;
+	        Tower.stomp_subscriptions = Client._stomp_subscriptions;
 
-			//open first section - channel
-			Tower.section['default']();
-		},
+	        //open first section - channel
+	        Tower.section['default']();
+	    },
 
-		//define the sections
-		section: {
+	    //define the sections
+	    section: {
 
-			'default': function _default() {
+	        'default': function _default() {
+	            var templatecheenltab = _.template('<li class="dropdown-item" href="#"><h4>CHANNELS</h4></li>' + '<hr />' + '<%=selecthtml%>');
+	            var templatecheenl = _.template('<li id="channelselectitem<%=indexid%>" class="dropdown-item" href="#" eventflag="channleselectfun" channeldata="<%=channlename%>"><%=channlename%></li>');
 
-				var templatecheenltab = _.template('<li class="dropdown-item" href="#"><h4>CHANNELS</h4></li>' + '<hr />' + '<%=selecthtml%>');
-				var templatecheenl = _.template('<li id="channelselectitem<%=indexid%>" class="dropdown-item" href="#" eventflag="channleselectfun" channeldata="<%=channlename%>"><%=channlename%></li>');
+	            _jquery2['default'].when(_utils2['default'].load({ url: 'default.json' }) //channellist
+	            //common.load({ url: 'default.json' })//curchannel
+	            ).done(function (response) {
 
-				_jquery2['default'].when(_utils2['default'].load({ url: 'default.json' }) //channellist
-				//common.load({ url: 'default.json' })//curchannel
+	                //response[0]
+	                //response[1]
 
-				).done(function (response) {
+	                statusUpdate(response);
 
-					//response[0]
-					//response[1]
+	                var channelsel = [];
 
-					statusUpdate(response);
+	                var channels = JSON.parse(response).data.attributes.allchannels;
 
-					var channelsel = [];
+	                var ind = 1;
+	                for (var item in channels) {
 
-					var channels = JSON.parse(response).data.attributes.allchannels;
+	                    channelsel.push(templatecheenl({ channlename: item, indexid: ind }));
+	                    ind++;
+	                }
 
-					var ind = 1;
-					for (var item in channels) {
+	                (0, _jquery2['default'])('#selectchannel').html(templatecheenltab({ selecthtml: channelsel.join('') }));
 
-						channelsel.push(templatecheenl({ channlename: item, indexid: ind }));
-						ind++;
-					}
+	                (0, _jquery2['default'])("[eventflag='channleselectfun']").on('click', function (event) {
 
-					(0, _jquery2['default'])('#selectchannel').html(templatecheenltab({ selecthtml: channelsel.join('') }));
+	                    //alert( $(event.currentTarget).attr('channeldata') );
 
-					(0, _jquery2['default'])("[eventflag='channleselectfun']").on('click', function (event) {
+	                });
+	            }).fail(function () {
 
-						//alert( $(event.currentTarget).attr('channeldata') );
+	                //alert(' I am default');
 
+	                statusUpdate({
+	                    status: 'DOWN',
+	                    peerCount: 'n/a',
+	                    latestBlock: 'n/a',
+	                    pendingTxn: 'n/a'
+	                });
+	            });
 
-					});
-				}).fail(function () {
+	            var statusUpdate = function statusUpdate(response) {
 
-					//alert(' I am default');
+	                var status = response;
 
-					statusUpdate({
-						status: 'DOWN',
-						peerCount: 'n/a',
-						latestBlock: 'n/a',
-						pendingTxn: 'n/a'
-					});
-				});
+	                _utils2['default'].prettyUpdate(Tower.status.peerCount, status.peerCount, (0, _jquery2['default'])('#default-peers'));
+	                _utils2['default'].prettyUpdate(Tower.status.latestBlock, status.latestBlock, (0, _jquery2['default'])('#default-blocks'));
+	                _utils2['default'].prettyUpdate(Tower.status.txCount, status.txCount, (0, _jquery2['default'])('#default-txn'));
+	                _utils2['default'].prettyUpdate(Tower.status.chaincodeCount, status.chaincodeCount, (0, _jquery2['default'])('#default-chaincode'));
 
-				var statusUpdate = function statusUpdate(response) {
+	                Tower.status = status;
 
-					var status = response;
+	                // Tower Control becomes ready only after the first status is received from the server
+	                if (!Tower.ready) {
+	                    Tower.isReady();
+	                }
 
-					_utils2['default'].prettyUpdate(Tower.status.peerCount, status.peerCount, (0, _jquery2['default'])('#default-peers'));
-					_utils2['default'].prettyUpdate(Tower.status.latestBlock, status.latestBlock, (0, _jquery2['default'])('#default-blocks'));
-					_utils2['default'].prettyUpdate(Tower.status.txCount, status.txCount, (0, _jquery2['default'])('#default-txn'));
-					_utils2['default'].prettyUpdate(Tower.status.chaincodeCount, status.chaincodeCount, (0, _jquery2['default'])('#default-chaincode'));
+	                Dashboard.Utils.emit('node-status|announce');
+	            };
 
-					Tower.status = status;
+	            _utils2['default'].subscribe('/topic/metrics/status', statusUpdate);
+	        },
 
-					// Tower Control becomes ready only after the first status is received from the server
-					if (!Tower.ready) {
-						Tower.isReady();
-					}
+	        'network': function network() {
+	            // data that the widgets will use
+	            var data = {
+	                'numUser': 4,
+	                'appName': 'sample app',
+	                'url': 'hello.com',
+	                'description': 'this is a description of the app.'
 
-					Dashboard.Utils.emit('node-status|announce');
-				};
+	                // the array of widgets that belong to the section,
+	                // these were preregistered in init() because they are unique
 
-				_utils2['default'].subscribe('/topic/metrics/status', statusUpdate);
-			},
+	            };var widgets = [{ widgetId: 'network', data: data }];
 
-			'channel': function channel() {
-				// data that the widgets will use
-				var data = {
-					'numUser': 4,
-					'appName': 'sample app',
-					'url': 'hello.com',
-					'description': 'this is a description of the app.'
+	            _utils2['default'].showHead(["default-channels", "default-peers", "default-chaincode"]);
 
-					// the array of widgets that belong to the section,
-					// these were preregistered in init() because they are unique
+	            // opens the section and pass in the widgets that it needs
+	            Dashboard.showSection('peers1', widgets);
+	        },
 
-				};var widgets = [{ widgetId: 'blockinfo', data: { a: 'ddd', b: 'bbb' } }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data },
-				// { widgetId: 'metrix_choc_tx' ,data: data},
-				{ widgetId: 'chaincodelist', data: data }, { widgetId: 'network', data: data }];
+	        'channel': function channel() {
+	            // data that the widgets will use
+	            var data = {
+	                'numUser': 4,
+	                'appName': 'sample app',
+	                'url': 'hello.com',
+	                'description': 'this is a description of the app.'
 
-				// opens the section and pass in the widgets that it needs
-				Dashboard.showSection('peers', widgets);
-			},
+	                // the array of widgets that belong to the section,
+	                // these were preregistered in init() because they are unique
 
-			// a section using same widget template for multiple widgets
-			'user': function user() {
+	            };var widgets = [{ widgetId: 'blockinfo', data: { a: 'ddd', b: 'bbb' } }, { widgetId: 'blocklist', data: data }, { widgetId: 'blockview', data: data }, { widgetId: 'txdetail', data: data }, { widgetId: 'peerlist', data: data }, { widgetId: 'metrix_txn_sec', data: data }, { widgetId: 'metrix_txn_min', data: data }, { widgetId: 'metrix_block_min', data: data },
+	            // { widgetId: 'metrix_choc_tx' ,data: data},
+	            { widgetId: 'chaincodelist', data: data }, { widgetId: 'network', data: data }];
 
-				// define the data
-				var userlist = {
-					'user1': {
-						'name': 'Admin',
-						'role': 'admin',
-						'id': 123
-					},
-					'user2': {
-						'name': 'Developer',
-						'role': 'developer',
-						'id': 456
-					},
-					'user3': {
-						'name': 'Data Scientist',
-						'role': 'data scientist',
-						'id': 789
-					},
-					'user4': {
-						'name': 'QA',
-						'role': 'qa',
-						'id': 101
-					}
-				};
+	            _utils2['default'].showHead(["default-peers", "default-chaincode", "default-blocks", "default-txn"]);
+	            // opens the section and pass in the widgets that it needs
+	            Dashboard.showSection('peers', widgets);
+	        },
 
-				var widgets = [];
-				//iterate over the data, creating a new widget for each item
-				_.each(userlist, function (user, key) {
-					var widget = {};
-					widget[key + '-user'] = __webpack_require__(441);
-					Dashboard.preregisterWidgets(widget);
+	        // a section using same widget template for multiple widgets
+	        'peers': function peers() {
 
-					widgets = widgets.concat([{
-						widgetId: key + '-user',
-						data: user
-					}]);
-				});
+	            // define the data
+	            var userlist = {
+	                'user1': {
+	                    'name': 'Admin1111',
+	                    'role': 'admin',
+	                    'id': 123
+	                },
+	                'user2': {
+	                    'name': 'Developer',
+	                    'role': 'developer',
+	                    'id': 456
+	                },
+	                'user3': {
+	                    'name': 'Data Scientist',
+	                    'role': 'data scientist',
+	                    'id': 789
+	                },
+	                'user4': {
+	                    'name': 'QA',
+	                    'role': 'qa',
+	                    'id': 101
+	                }
+	            };
 
-				Dashboard.showSection('channels', widgets);
-			}
-		},
+	            var widgets = [];
+	            //iterate over the data, creating a new widget for each item
+	            _.each(userlist, function (user, key) {
+	                var widget = {};
+	                widget[key + '-user'] = __webpack_require__(441);
+	                Dashboard.preregisterWidgets(widget);
 
-		debug: function debug(message) {
-			var _ref;
-			return typeof window !== 'undefined' && window !== null ? (_ref = window.console) !== null ? _ref.log(message) : void 0 : void 0;
-		}
+	                widgets = widgets.concat([{
+	                    widgetId: key + '-user',
+	                    data: user
+	                }]);
+	            });
+
+	            _utils2['default'].showHead(["default-channels", "default-chaincode"]);
+
+	            Dashboard.showSection('channels', widgets);
+	        }
+	    },
+
+	    debug: function debug(message) {
+	        var _ref;
+	        return typeof window !== 'undefined' && window !== null ? (_ref = window.console) !== null ? _ref.log(message) : void 0 : void 0;
+	    }
 	};
 
 	(0, _jquery2['default'])(function () {
-		(0, _jquery2['default'])(window).on('scroll', function (e) {
-			if ((0, _jquery2['default'])(window).scrollTop() > 50) {
-				(0, _jquery2['default'])('body').addClass('sticky');
-			} else {
-				(0, _jquery2['default'])('body').removeClass('sticky');
-			}
-		});
+	    (0, _jquery2['default'])(window).on('scroll', function (e) {
+	        if ((0, _jquery2['default'])(window).scrollTop() > 50) {
+	            (0, _jquery2['default'])('body').addClass('sticky');
+	        } else {
+	            (0, _jquery2['default'])('body').removeClass('sticky');
+	        }
+	    });
 
-		// logo handler
-		(0, _jquery2['default'])("a.tower-logo").click(function (e) {
-			e.preventDefault();
-			(0, _jquery2['default'])("#channel").click();
-		});
+	    // logo handler
+	    (0, _jquery2['default'])("a.tower-logo").click(function (e) {
+	        e.preventDefault();
+	        (0, _jquery2['default'])("#channel").click();
+	    });
 
-		// Menu (burger) handler
-		(0, _jquery2['default'])('.tower-toggle-btn').on('click', function () {
-			(0, _jquery2['default'])('.tower-logo-container').toggleClass('tower-nav-min');
-			(0, _jquery2['default'])('.tower-sidebar').toggleClass('tower-nav-min');
-			(0, _jquery2['default'])('.tower-body-wrapper').toggleClass('tower-nav-min');
-		});
+	    // Menu (burger) handler
+	    (0, _jquery2['default'])('.tower-toggle-btn').on('click', function () {
+	        (0, _jquery2['default'])('.tower-logo-container').toggleClass('tower-nav-min');
+	        (0, _jquery2['default'])('.tower-sidebar').toggleClass('tower-nav-min');
+	        (0, _jquery2['default'])('.tower-body-wrapper').toggleClass('tower-nav-min');
+	    });
 
-		// Navigation menu handler
-		(0, _jquery2['default'])('.tower-sidebar li').click(function (e) {
+	    // Navigation menu handler
+	    (0, _jquery2['default'])('.tower-sidebar li').click(function (e) {
 
-			var id = (0, _jquery2['default'])(this).attr('id');
+	        var id = (0, _jquery2['default'])(this).attr('id');
 
-			e.preventDefault();
+	        e.preventDefault();
 
-			Tower.current = id;
+	        Tower.current = id;
 
-			(0, _jquery2['default'])('.tower-sidebar li').removeClass('active');
-			(0, _jquery2['default'])(this).addClass('active');
+	        (0, _jquery2['default'])('.tower-sidebar li').removeClass('active');
+	        (0, _jquery2['default'])(this).addClass('active');
 
-			Tower.section[Tower.current]();
+	        Tower.section[Tower.current]();
 
-			(0, _jquery2['default'])('.tower-page-title').html((0, _jquery2['default'])('<span>', { html: (0, _jquery2['default'])(this).find('.tower-sidebar-item').html() }));
-		});
+	        (0, _jquery2['default'])('.tower-page-title').html((0, _jquery2['default'])('<span>', { html: (0, _jquery2['default'])(this).find('.tower-sidebar-item').html() }));
+	    });
 
-		// ---------- INIT -----------
-		Tower.init();
+	    // ---------- INIT -----------
+	    Tower.init();
 
-		// Setting 'peers' as first section
-		(0, _jquery2['default'])('.tower-sidebar li').first().click();
+	    // Setting 'peers' as first section
+	    (0, _jquery2['default'])('.tower-sidebar li').first().click();
 	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
@@ -95898,7 +95917,7 @@
 /* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function($) {'use strict';
+	/* WEBPACK VAR INJECTION */(function($, _) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -95949,9 +95968,18 @@
 	                });
 	            }, 500);
 	        }
+	    },
+	    showHead: function showHead(targets) {
+	        $("#heads-up > div").hide();
+	        $("#heads-up > div").removeClass();
+	        var l = 12 / targets.length;
+	        _.each(targets, function (target) {
+	            $("#" + target).parent().parent().addClass("col-lg-" + l + " col-xs-6");
+	            $("#" + target).parent().parent().show();
+	        });
 	    }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(4)))
 
 /***/ }),
 /* 328 */
@@ -96213,10 +96241,10 @@
 	            Dashboard.render.widget(this.name, this.shell.tpl);
 	            this.fetch();
 
-	            var nodes = new DataSet([{ id: 1, label: 'Node 1' }, { id: 2, label: 'Node 2' }, { id: 3, label: 'Node 3' }, { id: 4, label: 'Node 4' }, { id: 5, label: 'Node 5' }]);
+	            var nodes = new DataSet([{ id: 1, label: 'CA', font: { size: 30 }, shape: 'circle' }, { id: 2, label: 'Orderer', font: { size: 30 }, shape: 'ellipse' }, { id: 3, label: 'peer1', font: { size: 30 }, shape: 'box' }, { id: 4, label: 'peer2', font: { size: 30 }, shape: 'box' }, { id: 5, label: 'peer3', font: { size: 30 }, shape: 'box' }, { id: 6, label: 'peer4', font: { size: 30 }, shape: 'box' }, { id: 7, label: 'peer5', font: { size: 30 }, shape: 'box' }, { id: 8, label: 'peer6', font: { size: 30 }, shape: 'box' }, { id: 9, label: 'peer7', font: { size: 30 }, shape: 'box' }]);
 
 	            // create an array with edges
-	            var edges = new DataSet([{ from: 1, to: 3 }, { from: 1, to: 2 }, { from: 2, to: 4 }, { from: 2, to: 5 }]);
+	            var edges = new DataSet([{ from: 3, to: 2, arrows: 'to' }, { from: 4, to: 2, arrows: 'to' }, { from: 5, to: 2, arrows: 'to' }, { from: 6, to: 2, arrows: 'to' }, { from: 7, to: 2, arrows: 'to' }, { from: 8, to: 2, arrows: 'to' }, { from: 9, to: 2, arrows: 'to' }]);
 
 	            // create a network
 	            var container = document.getElementById('widget-' + this.shell.id);
