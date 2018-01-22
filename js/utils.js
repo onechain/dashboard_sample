@@ -41,11 +41,19 @@ export default {
     showHead: function (targets) {
         $("#heads-up > div").hide();
         $("#heads-up > div").removeClass();
-        var l=12/targets.length
+        var l = 12 / targets.length
         _.each(targets, function (target) {
-            $("#" + target).parent().parent().addClass("col-lg-"+l+" col-xs-6");
+            $("#" + target).parent().parent().addClass("col-lg-" + l + " col-xs-6");
             $("#" + target).parent().parent().show();
         })
+    },
+    showSelet: function (target) {
+        $('#showSelect').hide();
+        var targets=["channel","peers"];
+        if(_.contains(targets, target)){
+            $("#showSelectTitle").html('Select '+target+ '<b class="caret"></b>');
+            $('#showSelect').show();
+        }
     }
 };
 

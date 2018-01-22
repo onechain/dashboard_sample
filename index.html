@@ -159,16 +159,24 @@
 
 </body>
 <script type="text/javascript">
+
     function openblockdetail(blockid) {
+
         var titleinfo = " #[" + blockid + "]";
+
         $.layer({
+
             type: 2,
             border: [0],
             area: ['850px', '700px'],
             offset: ['10px', ''],
+
             title: titleinfo,
             iframe: {src: 'json.html'}
+
         });
+
     }
+
 </script>
 </html>
