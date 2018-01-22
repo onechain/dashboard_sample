@@ -311,8 +311,8 @@ $(function () {
 
         Tower.section[Tower.current]();
 
-        $('.tower-page-title').html($('<span>', {html: $(this).find('.tower-sidebar-item').html()}));
-
+        $('#showTitle').html($('<span>', {html: $(this).find('.tower-sidebar-item').html()}));
+        utils.showSelet(Tower.current);
 
     });
 
