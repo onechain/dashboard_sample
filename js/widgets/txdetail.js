@@ -8,15 +8,16 @@ module.exports = function(id) {
 
 		hideLink: true,
 
-		template: _.template('<div class="info-table"> <table class="table table-striped"> ' +
-			''+
-			'<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' +
-			'<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' +
-			'<tr> <td>URL</td> <td><a href=""><%= url %></a></td> </tr>' +
-			'<tr> <td>Description</td> <td><%=desc%> </td> </tr>' +
-			'</tbody> </table> <div>'),
+        template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped"> ' +
+            ''+
+            '<tbody>'+
+            '<tr> <td  style="width: 120px;">tx_id</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr> <td  style="width: 120px;">timestamp</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr> <td  style="width: 120px;">channel_id</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr> <td  style="width: 120px;">type</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '</tbody> </table> <div>'),
 
-		init: function(data) {
+        init: function(data) {
 			Dashboard.Utils.emit('widget|init|' + this.name);
 
 			if (data) {

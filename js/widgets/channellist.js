@@ -1,21 +1,22 @@
 
 module.exports = function(id) {
 	var extended = {
-		name: 'peerlist',
-		title: 'peerlist',
-		size: 'medium',
+		name: 'channellist',
+		title: 'channel list',
+		size: 'large',
 		widgetId: id, //needed for dashboard
 
 		hideLink: true,
 
 
-		template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
-			'<thead style="font-weight: bold;"><tr><td>name</td><td>request</td><td>server-hostname</td></tr></thead>'+
+		template: _.template('<div class="info-table"> ' +
+			'<table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
+			'<thead style="font-weight: bold;">' +
+			'<tr><td>name</td><td>blocks</td><td>teransactions</td><td>keysets</td></tr>' +
+			'</thead>'+
 			'<tbody>' +
-			'<tr> <td>peer1</td> <td>127.0.0.1:7051</td><td>peer0.org1.example.com</td> </tr>' +
-			'</tbody> ' +
-			'</table> ' +
-			'<div>'),
+			'<tr> <td>roberttestchannel12</td> <td>118</td><td>43</td><td>45</td> </tr>' +
+			'</tbody> </table> <div>'),
 
 		init: function(data) {
 			Dashboard.Utils.emit('widget|init|' + this.name);

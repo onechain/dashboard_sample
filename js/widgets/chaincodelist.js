@@ -9,12 +9,16 @@ module.exports = function(id) {
 		hideLink: true,
 
 
-		template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
-			'<thead style="font-weight: bold;"><tr><td>name</td><td>version</td><td>path</td><td>trans</td></tr></thead>'+
-			'<tbody><tr> <td>App Name</td> <td><%= app %></td><td><%= app %></td><td><%= app %></td> </tr>' +
-			'<tr> <td># of Users</td> <td><%= numUser %></td><td><%= numUser %></td> <td><%= numUser %></td></tr>' +
-			'<tr> <td>URL</td> <td><a href=""><%= url %></a></td><td><a><%= url %></a></td><td><a><%= url %></a></td> </tr>' +
-			'</tbody> </table> <div>'),
+		template: _.template('<div class="info-table">' +
+			' <table style="width: 100%; table-layout: fixed;" class="table table-striped">' +
+			'<thead style="font-weight: bold;">' +
+			'<tr><td style="width: 30%;">name</td><td style="width: 10%;">version</td><td style="width: 50%;">path</td><td style="width: 10%;">trans</td></tr>' +
+			'</thead>'+
+			'<tbody>' +
+			'<tr> <td>cb_rog1org2</td> <td>1.0</td><td>github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02</td><td>33</td> </tr>' +
+			'</tbody> ' +
+			'</table> ' +
+			'<div>'),
 
 		init: function(data) {
 			Dashboard.Utils.emit('widget|init|' + this.name);

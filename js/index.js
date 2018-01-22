@@ -155,7 +155,7 @@ window.Tower = {
 
         },
 
-        'network': function () {
+        'organization': function () {
             // data that the widgets will use
             var data = {
                 'numUser': 4,
@@ -185,7 +185,7 @@ window.Tower = {
             utils.showHead(["default-channels","default-peers","default-chaincode"]);
 
             // opens the section and pass in the widgets that it needs
-            Dashboard.showSection('peers1', widgets);
+            Dashboard.showSection('organization', widgets);
         },
 
         'channel': function () {
@@ -212,7 +212,7 @@ window.Tower = {
                 {widgetId: 'metrix_block_min', data: data},
                 // { widgetId: 'metrix_choc_tx' ,data: data},
                 {widgetId: 'chaincodelist', data: data},
-                {widgetId: 'network', data: data},
+                
 
                 /*{ widgetId: 'misc' },
                 { widgetId: 'lab' },
@@ -226,52 +226,43 @@ window.Tower = {
 
             utils.showHead(["default-peers","default-chaincode","default-blocks","default-txn"]);
             // opens the section and pass in the widgets that it needs
-            Dashboard.showSection('peers', widgets);
+            Dashboard.showSection('channel', widgets);
         },
 
         // a section using same widget template for multiple widgets
         'peers': function () {
-
-            // define the data
-            var userlist = {
-                'user1': {
-                    'name': 'Admin1111',
-                    'role': 'admin',
-                    'id': 123
-                },
-                'user2': {
-                    'name': 'Developer',
-                    'role': 'developer',
-                    'id': 456
-                },
-                'user3': {
-                    'name': 'Data Scientist',
-                    'role': 'data scientist',
-                    'id': 789
-                },
-                'user4': {
-                    'name': 'QA',
-                    'role': 'qa',
-                    'id': 101
-                }
+            // data that the widgets will use
+            var data = {
+                'numUser': 4,
+                'appName': 'sample app',
+                'url': 'hello.com',
+                'description': 'this is a description of the app.'
             }
 
-            var widgets = [];
-            //iterate over the data, creating a new widget for each item
-            _.each(userlist, function (user, key) {
-                var widget = {};
-                widget[key + '-user'] = require('./widgets/user.js');
-                Dashboard.preregisterWidgets(widget);
+            // the array of widgets that belong to the section,
+            // these were preregistered in init() because they are unique
 
-                widgets = widgets.concat([{
-                    widgetId: key + '-user',
-                    data: user
-                }])
-            })
+            var widgets = [
+
+
+                // { widgetId: 'metrix_choc_tx' ,data: data},
+                {widgetId: 'channellist', data: data},
+                {widgetId: 'chaincodelist', data: data},
+
+
+                /*{ widgetId: 'misc' },
+                { widgetId: 'lab' },
+                { widgetId: 'date' },
+                { widgetId: 'controls' },
+                { widgetId: 'weather' },
+                { widgetId: 'info' , data: data}, //data can be passed in
+                { widgetId: 'form' },*/
+
+            ];
 
             utils.showHead(["default-channels","default-chaincode"]);
-
-            Dashboard.showSection('channels', widgets);
+            // opens the section and pass in the widgets that it needs
+            Dashboard.showSection('peers', widgets);
         }
     },
 

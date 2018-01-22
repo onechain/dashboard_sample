@@ -11,13 +11,15 @@ module.exports = function(id) {
 
 		customButtons: '<li><i class="show_detail fa fa-expand"></i></li>',
 
-		template: _.template('<div class="info-table"> <table class="table table-striped"> ' +
-			''+
-			'<tbody><tr> <td>App Name</td> <td><%= app %></td> </tr>' +
-			'<tr> <td># of Users</td> <td><%= numUser %></td> </tr>' +
-			'<tr> <td>URL</td> <td><a href="">11111</a></td> </tr>' +
-			'<tr> <td>Description</td> <td><%=desc%> </td> </tr>' +
-			'</tbody> </table> <div>'),
+
+        template: _.template('<div class="info-table"> <table style="width: 100%; table-layout: fixed;" class="table table-striped"> ' +
+            '<tbody><tr> <td  style="width: 120px;">number</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr> <td  style="width: 120px;">previous_hash</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr> <td  style="width: 120px;">data_hash</td> <td class="value" contentEditable="false" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></td> </tr>' +
+            '<tr><td style="width: 100px;">Transactions</td><td style="text-overflow: ellipsis; overflow: hidden;"></td></tr>'+
+            '</tbody> </table> <div>'),
+
+
 
 		setData: function(data) {
 			this.data = data;

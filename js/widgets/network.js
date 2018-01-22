@@ -74,7 +74,15 @@ module.exports = function (id) {
                 nodes: nodes,
                 edges: edges
             };
-            var options = {};
+            var options = {
+
+
+                "interaction": {
+
+                    "zoomView": false   //控制是否被移动
+                },
+
+            };
 
             // initialize your network!
             var network = new Network(container, data, options);
