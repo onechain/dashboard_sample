@@ -170,7 +170,7 @@ window.Tower = {
             var widgets = [
 
 
-                {widgetId: 'network', data: data},
+                {widgetId: 'network', data: data,refetch: true},
 
                 /*{ widgetId: 'misc' },
                 { widgetId: 'lab' },
@@ -202,16 +202,16 @@ window.Tower = {
 
             var widgets = [
 
-                {widgetId: 'blockinfo', data: {a: 'ddd', b: 'bbb'}},
-                {widgetId: 'blocklist', data: data},
-                {widgetId: 'blockview', data: data},
-                {widgetId: 'txdetail', data: data},
-                {widgetId: 'peerlist', data: data},
-                {widgetId: 'metrix_txn_sec', data: data},
-                {widgetId: 'metrix_txn_min', data: data},
-                {widgetId: 'metrix_block_min', data: data},
+                {widgetId: 'blockinfo', data: {a: 'ddd', b: 'bbb'},refetch: true},
+                {widgetId: 'blocklist', data: data,refetch: true},
+                {widgetId: 'blockview', data: data,refetch: true},
+                {widgetId: 'txdetail', data: data,refetch: true},
+                {widgetId: 'peerlist', data: data,refetch: true},
+                {widgetId: 'metrix_txn_sec', data: data,refetch: true},
+                {widgetId: 'metrix_txn_min', data: data,refetch: true},
+                {widgetId: 'metrix_block_min', data: data,refetch: true},
                 // { widgetId: 'metrix_choc_tx' ,data: data},
-                {widgetId: 'chaincodelist', data: data},
+                {widgetId: 'chaincodelist', data: data,refetch: true},
                 
 
                 /*{ widgetId: 'misc' },
@@ -246,8 +246,8 @@ window.Tower = {
 
 
                 // { widgetId: 'metrix_choc_tx' ,data: data},
-                {widgetId: 'channellist', data: data},
-                {widgetId: 'chaincodelist', data: data},
+                {widgetId: 'channellist', data: data,refetch: true},
+                {widgetId: 'chaincodelist', data: data,refetch: true},
 
 
                 /*{ widgetId: 'misc' },

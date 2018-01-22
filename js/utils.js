@@ -49,11 +49,34 @@ export default {
     },
     showSelet: function (target) {
         $('#showSelect').hide();
-        var targets=["channel","peers"];
-        if(_.contains(targets, target)){
-            $("#showSelectTitle").html('Select '+target+ '<b class="caret"></b>');
+        var targets = [
+            {name: 'channel', showText: "Channels", url: ''},
+            {name: 'peers', showText: "Peers", url: ''}
+        ]
+        var selected = _.where(targets, {name: target});
+
+        $("#showSelectContent").unbind('click');
+        $('#showSelectContent').on('click', 'a', function (e) {
+            e.preventDefault();
+            Tower.section[Tower.current]();
+        });
+
+        _.each(selected, function (ele) {
+            $("#showSelectTitle").html('Select ' + ele.name + '<b class="caret"></b>');
+
+
+            // $.when(
+            //     utils.load({url: ele.url})
+            // ).done(function (data) {
+            //     $("#showSelectContent").html('');
+            //     _.each(data, function (item) {
+            //         $("#showSelectContent").append('<li><a href="#">'+Item+'</a></li>')
+            //     })
+            // });
+
             $('#showSelect').show();
-        }
+        });
+
     }
 };
 
